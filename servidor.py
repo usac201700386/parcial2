@@ -27,7 +27,7 @@ server_MQTT.on_publish = on_publish #Se configura la funcion "Handler" que se ac
 server_MQTT.username_pw_set(MQTT_USUARIO, MQTT_KEY) #Credenciales requeridas por el broker
 server_MQTT.connect(host = HOST, port = MQTT_PORT) #Conectar al servidor remoto
 
-server_MQTT.publish('comandos/04', "Mensaje inicial de prueba", qos = 0, retain = False)
+server_MQTT.publish('comandos/04', "/x01", qos = 0, retain = False)
 
 server_MQTT.disconnect()
 logging.info("Se ha desconectado del broker. Saliendo...")
