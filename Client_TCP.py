@@ -5,9 +5,9 @@ import time
 #delay= 0.0025
 SEPARATOR = "<SEPARATOR>"
 BUFFER_SIZE = 64*1024 # send 4096 bytes each time step
-host = "localhost"
+host = '167.71.243.238'#"localhost"
 # the port, let's use 5001
-port = 5001
+port = 9804
 # the name of file we want to send, make sure it exists
 #filename = "texto.txt"
 # get the file size

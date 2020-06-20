@@ -4,8 +4,8 @@ import os
 import time
 #delay=0.0025
 # device's IP address
-SERVER_HOST = "0.0.0.0"
-SERVER_PORT = 5001
+SERVER_HOST = "167.71.243.238"
+SERVER_PORT = 9804#5001
 # receive 4096 bytes each time
 BUFFER_SIZE = 64 *1024
 SEPARATOR = "<SEPARATOR>"
