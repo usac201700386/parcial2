@@ -6,9 +6,9 @@ import logging
 
 
 BUFFER_SIZE = 64*1024 # send 4096 bytes each time step
-host = 'localhost'#'167.71.243.238'
+host = '167.71.243.238'
 
-port = 9800
+port = 9804
 #Configuracion inicial para logging. logging.DEBUG muestra todo.
 logging.basicConfig(
     level = logging.DEBUG, 

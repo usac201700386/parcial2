@@ -4,8 +4,8 @@ import os
 import time
 import logging
 #JDCP  estos datos se tienen que importar desde un archivo de texto plano
-SERVER_HOST = 'localhost'#"167.71.243.238" #host a conectar
-SERVER_PORT = 9800#9804# numero de puerto a utlizar
+SERVER_HOST = "167.71.243.238" #host a conectar
+SERVER_PORT = 9804#9804# numero de puerto a utlizar
 BUFFER_SIZE = 64 *1024
 #este carcter es propio del prama para obtener informacion
 
