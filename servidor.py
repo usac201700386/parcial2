@@ -35,14 +35,15 @@ server_MQTT.on_message = on_message #Se configura la funcion "Handler" que se ac
 server_MQTT.username_pw_set(MQTT_USUARIO, MQTT_KEY) #Credenciales requeridas por el broker
 server_MQTT.connect(host = HOST, port = MQTT_PORT) #Conectar al servidor remoto
 
-topico = 'comandos/04'
-mensaje = 'prueba XD'
+#topico = 'comandos/04'
+#usuario = '201701042'
+#mensaje = 'prueba XD'
 
 #Publicacion simple
-server_MQTT.publish(topico, mensaje, qos = 0, retain = False)
+#server_MQTT.publish('comandos/04/201701042' + usuario, mensaje, qos = 0, retain = False)
 
 #Subscripcion simple con tupla (topic,qos)
-server_MQTT.subscribe((topico, 0))
+server_MQTT.subscribe(('comandos/04/201700804', 0))
 
 #Iniciamos el thread (implementado en paho-mqtt) para estar atentos a mensajes en los topics subscritos
 server_MQTT.loop_start()
@@ -50,7 +51,8 @@ server_MQTT.loop_start()
 
 try:
     while True:
-        pass
+        mensaje = input('mensaje a enviar: ')
+        server_MQTT.publish('comandos/04/201701042', mensaje, qos = 0, retain = False)
 
 except KeyboardInterrupt:
     logging.info('Desconectando...')
