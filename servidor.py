@@ -24,6 +24,7 @@ def on_message(client, userdata, msg):
     #Se muestra en pantalla informacion que ha llegado
     logging.info('mensaje recibido: ' + str(msg.payload))
 
+
 '''
 Config. inicial del cliente MQTT
 '''
@@ -35,7 +36,7 @@ server_MQTT.username_pw_set(MQTT_USUARIO, MQTT_KEY) #Credenciales requeridas por
 server_MQTT.connect(host = HOST, port = MQTT_PORT) #Conectar al servidor remoto
 
 topico = 'comandos/04'
-mensaje = b'/x01'
+mensaje = 'prueba XD'
 
 #Publicacion simple
 server_MQTT.publish(topico, mensaje, qos = 0, retain = False)
