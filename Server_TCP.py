@@ -8,6 +8,7 @@ SERVER_HOST = "167.71.243.238"
 SERVER_PORT = 9804#5001
 # receive 4096 bytes each time
 BUFFER_SIZE = 64 *1024
+
 SEPARATOR = "<SEPARATOR>"
 
 # create the server socket
