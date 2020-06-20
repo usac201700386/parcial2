@@ -4,8 +4,8 @@ import os
 import time
 #delay=0.0025
 # device's IP address
-SERVER_HOST = "167.71.243.238"
-SERVER_PORT = 9804#5001
+SERVER_HOST = 'localhost'#"167.71.243.238"
+SERVER_PORT = 9800#9804#5001
 # receive 4096 bytes each time
 BUFFER_SIZE = 64 *1024
 
@@ -27,7 +27,7 @@ print(f"[+] {address} is connected.")
 received = client_socket.recv(BUFFER_SIZE).decode()
 filename, filesize = received.split(SEPARATOR)
 # remove absolute path if there is
-filename = 'recibido.wav'#os.path.basename(filename)
+filename = 'REB_server.wav'#os.path.basename(filename)
 # convert to integer
 filesize = int(filesize)
 
