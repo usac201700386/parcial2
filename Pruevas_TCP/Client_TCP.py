@@ -27,8 +27,9 @@ def est_connect(host='167.71.243.238',port=9804):
     
 
 def Audio_create(filename='audio.wav',duracion=3):
-    
+    logging.info('inicia grabacion')
     os.system('arecord -d '+str(duracion)+' -f U8 -r 8000 '+filename)
+    logging.info('termina grabacion')
     #JDCP se obtiene el tamano del archivo de grabacion
     filesize = os.path.getsize(filename)
     return filename , filesize
@@ -86,6 +87,9 @@ def Recp_TCP_Client (host='167.71.243.238',port=9804):
             f.write(bytes_read)
            
         progress.update(i)
+    logging.info('inicia reproduccion')
+    os.system('aplay '+filename)
+    logging.info('termina reproduccion')
     #JDCP se desconecta de cliente TCP al recibir el archivo
     sock.close()
 
