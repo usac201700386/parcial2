@@ -3,59 +3,97 @@ import logging
 from globals import *
 
 class Servidor():
-    #DAHM Metodo constructor del objeto de la clase servidor
-    def __init__(self, ip = HOST, portMQTT = MQTT_PORT, portTCP = TCP_HOST, user = MQTT_USUARIO, passwd = MQTT_KEY, x = mqtt.Client(clean_session=True)):
+    #DAHM Metodo constructor del objeto de la clase servidor, este metodo toma las constantes globales necesarias para:
+    #DAHM crear una instancia del tipo mqtt.Client, una de tipo socket y los archivos de texto donde se va a llevar el
+    #DAHM control de usuarios y salas.
+    def __init__(self, ip = HOST, portMQTT = MQTT_PORT, portTCP = TCP_HOST, 
+                user = MQTT_USUARIO, passwd = MQTT_KEY, qos = QOS_LEVEL,
+                x = mqtt.Client(clean_session=True),
+                usuarios = USERS_FILE, salas = ROOMS_FILE,
+                grupo = GROUP_ID):
+        #DAHM Se pasan los parametros de la clase los cuales son constantes de globals.py
         self.ip = ip
         self.portMQTT = portMQTT
         self.portTCP = portTCP
         self.user = user
         self.passwd = passwd
+        self.qos = qos
+        #DAHM Llamamos x a la instancia de la clase mqtt.Client
         self.x = x
+        #DAHM Estos son los archivos de texto donde se lleva el control de las salas y los usuarios
+        self.usuarios = usuarios
+        self.salas = salas
+        #DAHM Datos del grupo
+        self.grupo = grupo
 
     #DAHM Configuracion inicial para que el servidor se vuelva subscriptor y publicador en el broker
     def configMQTT(self):
         client = self.x
 
-        #Configuracion inicial de logging
+        #DAHM Se configura el logging para que muestre todo desde nivel DEBUG hacia arriba
         logging.basicConfig(
         level = logging.DEBUG, 
         format = '[%(levelname)s] (%(processName)-10s) %(message)s'
         )
 
-        #Handler en caso suceda la conexion con el broker MQTT
+        #DAHM La funcion Handler que atiende el evento on_connect (cuando se logra conectar al broker mosquitto)
         def on_connect(client, userdata, flags, rc): 
             connectionText = "CONNACK recibido del broker con codigo: " + str(rc)
             logging.info(connectionText)
 
-        #Handler en caso se publique satisfactoriamente en el broker MQTT
+        #DAHM La funcion Handler que atiende el evento on_publish (cuando se publica en algun topic)
         def on_publish(client, userdata, mid): 
             publishText = "Publicacion satisfactoria"
             logging.debug(publishText)
 
-        #Callback que se ejecuta cuando llega un mensaje al topic suscrito
+        #DAHM La funcion Handler que atiende el evento on_message (cuando llega algun mensaje a algun topic que esta subscrito el servidor)
         def on_message(client, userdata, msg):
             #Se muestra en pantalla informacion que ha llegado
-            logging.info('mensaje recibido: ' + str(msg.payload))
+            logging.info('mensaje recibido: ' + str(msg.payload) + ' del topico: ' + str(msg.topic))
 
-        client.on_connect = on_connect #Se configura la funcion "Handler" cuando suceda la conexion
-        client.on_message = on_message #Se configura la funcion "Handler" que se activa al llegar un mensaje a un topic subscrito
+        #DAHM Se le asignan estos handlers a la instancia x
+        client.on_connect = on_connect 
+        client.on_message = on_message 
         client.on_publish = on_publish
-        client.username_pw_set(self.user, self.passwd) #Credenciales requeridas por el broker
+
+        #DAHM Se configura el usuario y la contraseña de la cuenta del broker al cual nos queremos conectar
+        client.username_pw_set(self.user, self.passwd) 
 
     #DAHM metodos del servidor
-    def subscripcion(self, topico, qos=0):
+    def subscripcion(self):
         client = self.x
-        client.subscribe((topico, qos))
+        topicos = []
+        #DAHM Ahora que ya hay certeza de que existen los archivos se ponen en modo lectura.
+        archivo_usuarios = open(self.usuarios, 'r')
+        archivo_salas = open(self.salas, 'r')
+        #DAHM Un bucle separa las comas de cada linea del archivo usuarios.
+        for usuario in archivo_usuarios:
+            t = usuario.split(',')
+            topico = ('usuarios' + '/' + t[0], self.qos)
+            topicos.append(topico)
+        archivo_usuarios.close()
+        #DAHM Este otro bucle toma cada linea del archivo salas y guarda cada topico en el formato indicado
+        for sala in archivo_salas:
+            sala = sala.split('\n')
+            topico = ('salas' + '/' + self.grupo + '/' + sala[0][2:], self.qos)
+            topicos.append(topico)
+        archivo_salas.close()
+        #DAHM Ya que se tiene una lista de tuplas con todos los elementos de los archivos de texto se subscribe el servidor
+        client.subscribe(topicos[:])
+        #DAHM Se comienza el thread demonio que ve si llega algun mensaje a alguno de estos topicos
         client.loop_start()
 
-    def publicar(self, topico, mensaje, qos=0):
+    #DAHM Esta funcion es la analogia de publish de paho
+    def publicar(self, topico, mensaje):
         client = self.x
-        client.publish(topico, mensaje, qos, retain = False)
+        client.publish(topico, mensaje, self.qos, retain = False)
 
+    #DAHM conecta al broker la instancia creada en __init__
     def  conectar(self):
         client = self.x
         client.connect(host = self.ip, port = self.portMQTT) #DAHM Conectar al servidor remoto
 
+    #DAHM Desconecta del broker la instancia creada en __init__
     def desconectar(self):
         client = self.x
         client.disconnect()

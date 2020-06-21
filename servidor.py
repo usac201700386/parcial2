@@ -1,15 +1,15 @@
-from manejoServer import *
+from manejoServer import Servidor
+import logging
 
 server = Servidor()
 
 server.configMQTT()
 server.conectar()
-server.subscripcion('201700804')
+server.subscripcion()
 
 try:
     while True:
-        mensaje = input('ingrese mensaje: ')
-        server.publicar('201701042', mensaje)
+        pass
 
 except KeyboardInterrupt:
     logging.info('desconectado del broker!')
