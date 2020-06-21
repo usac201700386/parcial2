@@ -138,11 +138,11 @@ class Cliente(object):
     #-----------------------------------------------------------------------------------
 
 
-    def Audio_create(filename='audio.wav',duracion=3):
-        logging.info('inicia grabacion')
-        os.system('arecord -d '+str(duracion)+' -f U8 -r 8000 '+filename)
-        logging.info('termina grabacion')
-        #JDCP se obtiene el tamano del archivo de grabacion
-        filesize = os.path.getsize(filename)
-        return filename , filesize
+def Audio_create(filename='audio.wav',duracion=3):
+    logging.info('inicia grabacion')
+    os.system('arecord -d '+str(duracion)+' -f U8 -r 8000 '+filename)
+    logging.info('termina grabacion')
+    #JDCP se obtiene el tamano del archivo de grabacion
+    filesize = os.path.getsize(filename)
+    return filename , filesize
 
