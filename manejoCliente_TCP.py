@@ -71,7 +71,7 @@ class Cliente(object):
         sock = socket.socket()
         #JDCP se indica se que esta intentando conectar al servidor
         logging.debug(f"[+] Intentando conectar al servidor y puerto {host}:{port}")
-        sock.connect((host=self.ip, self.portTCP))
+        sock.connect((self.ip, self.portTCP))
         # si no hay errores entonces se conecta 
         logging.debug("[+] Conectado con el servidor.")
         return sock
@@ -80,7 +80,7 @@ class Cliente(object):
         filesize=os.path.getsize(filename)
         #se manda la informacion del comando FTR , destino y peso del archivo
         SEPARATOR = "<SEPARATOR>" # solamente servira para dierencia la informacion comandos 
-        sock= est_connect(host= self.ip ,port= self.portTCP)
+        sock= self.est_connect()
 
         sock.send(f"{filename}{SEPARATOR}{filesize}".encode())
         filesize=int(filesize)
@@ -102,11 +102,11 @@ class Cliente(object):
         # close the socket
         sock.close()
 
-   def Recp_TCP_Client (self):
+    def Recp_TCP_Client (self):
         #JDCP ESTABLECIENDO COMUNICAICOND CON EL SERVIDOR PARA RECIBIR ARCHIVOS
         time.sleep(0.05)
-        sock= est_connect(host=self.ip,port=self.portTCP)
-        received = sock.recv(BUFFER_SIZE).decode()
+        sock= self.est_connect()
+        received = sock.recv(64*1024).decode()
         SEPARATOR = "<SEPARATOR>" 
         filename, filesize = received.split(SEPARATOR)
         # remove absolute path if there is

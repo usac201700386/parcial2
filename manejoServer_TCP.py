@@ -70,10 +70,10 @@ class Servidor():
         #JDCP SE CREAR EL OBJETO TIPO SOCKET
         servidor = socket.socket()
         #JDCP SE LEVANTA EL SERVIDOR TCP LISTO PARA ESCUCHA
-        servidor.bind((host = self.ip,port = self.portTCP))
+        servidor.bind((self.ip,self.portTCP))
 
         servidor.listen(5)
-        logging.debug(f"[*] Esperando conexion en {SERVER_HOST}:{SERVER_PORT}")
+        logging.debug(f"[*] Esperando conexion en {self.ip}:{self.portTCP}")
         #JDCP se obtine la informacion del cliente que se conecto al servicio
         client_socket, address = servidor.accept() # datos el 
         #JDCP SE AVISA POR MEDIO DE LOGGING QUE SE HA CONECTADO AL SERVIDOR
@@ -84,7 +84,7 @@ class Servidor():
         #JDCP se obtiene todos los parametros y objetos de la funcion que levanta el servidor TCP
         server,cliente,direccion = self.est_servidor()
         #SE ESTA ATENTO A LA INFORMACION QUE SE RECIBE DEL TCP SOBRE EL TAMANO DEL ARCHIVO
-        received = cliente.recv(BUFFER_SIZE).decode()
+        received = cliente.recv(64*1024).decode()
         SEPARATOR = "<SEPARATOR>"
         #SE ESTABLECE EL NOMBRE DEL ARCHIVO QUE SE ALMACENA EN EL servido
         filename, filesize = received.split(SEPARATOR)

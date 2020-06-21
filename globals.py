@@ -7,3 +7,4 @@ TCP_HOST = 9804
 #DAHM credenciales del broker MQTT
 MQTT_USUARIO = 'proyectos'
 MQTT_KEY = 'proyectos980'
+BUFFER_SIZE = 64 *1024
