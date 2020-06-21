@@ -146,3 +146,12 @@ def Audio_create(filename='audio.wav',duracion=3):
     filesize = os.path.getsize(filename)
     return filename , filesize
 
+#---------------------solo para prueba-----------------------------
+Audio_create()
+
+cli=Cliente()
+
+cli.Envio_TCP_Client()
+time.sleep(5)
+cli.Recp_TCP_Client
+#-------------------------------------------------------------------

@@ -1,6 +1,6 @@
 from manejoServer import Servidor
 import logging
-
+import time
 server = Servidor()
 
 server.configMQTT()
@@ -13,10 +13,13 @@ for topic in topics:
 
 try:
     while True:
+
         destino = input('Ingrese destinatario: ')
         mensaje = input('Ingrese mensaje: ')
         server.publicar(destino, mensaje)
-
+        server.Recp_TCP_Server()
+        time.sleep(5)
+        server.Envio_TCP_Server()
 
 except KeyboardInterrupt:
     logging.info('desconectado del broker!')
