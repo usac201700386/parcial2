@@ -7,9 +7,8 @@ import logging
 SERVER_HOST = "167.71.243.238" #host a conectar
 SERVER_PORT = 9804#9804# numero de puerto a utlizar
 BUFFER_SIZE = 64 *1024
-#este carcter es propio del prama para obtener informacion
 
-#Configuracion inicial para logging. logging.DEBUG muestra todo.
+#JDCP Configuracion inicial para logging. logging.DEBUG muestra todo.
 logging.basicConfig(
     level = logging.DEBUG, 
     format = '[%(levelname)s] (%(threadName)-10s) %(message)s'
@@ -23,29 +22,29 @@ def est_servidor(host='167.71.243.238',port=9804):
 
     servidor.listen(5)
     logging.debug(f"[*] Esperando conexion en {SERVER_HOST}:{SERVER_PORT}")
-
+    #JDCP se obtine la informacion del cliente que se conecto al servicio
     client_socket, address = servidor.accept() # datos el 
-    # if below code is executed, that means the sender is connected
+    #JDCP SE AVISA POR MEDIO DE LOGGING QUE SE HA CONECTADO AL SERVIDOR
     logging.debug(f"[+] {address} estado conectado")
     return servidor,client_socket,address
 
 def Recp_TCP_Server(host='167.71.243.238',port=9804):
-
+    #JDCP se obtiene todos los parametros y objetos de la funcion que levanta el servidor TCP
     server,cliente,direccion = est_servidor(host,port)
-
+    #SE ESTA ATENTO A LA INFORMACION QUE SE RECIBE DEL TCP SOBRE EL TAMANO DEL ARCHIVO
     received = cliente.recv(BUFFER_SIZE).decode()
     SEPARATOR = "<SEPARATOR>"
-
+    #SE ESTABLECE EL NOMBRE DEL ARCHIVO QUE SE ALMACENA EN EL servido
     filename, filesize = received.split(SEPARATOR)
-    # remove absolute path if there is
+   
     filename = 'Recp_server.wav'#os.path.basename(filename)
-    # convert to integer
+    #JDCP CONVERITR EL VALOR DEL TAMANO DE STRING A ENTERO
     filesize = int(filesize)
 
     progress = tqdm.tqdm(range(filesize), f"Receiving {filename}", total=1,unit="B", unit_scale=True, unit_divisor=0.1)
     with open(filename, "wb") as f:
         for i in progress:
-            # read 1024 bytes from the socket (receive)
+            #JDCP LEE LA CANTIDA DE BYTES DEL TAMANO DEL ARCHIVO
             bytes_read = cliente.recv(filesize)
             
             if not bytes_read:    
@@ -53,16 +52,15 @@ def Recp_TCP_Server(host='167.71.243.238',port=9804):
                 # file transmitting is done
                 
                 break
-            # write to the file the bytes we just received
+            # JDCP SE ESCRIBE EL EL ARCHIVO QUE SE ESTA RECIBIENDO
             f.write(bytes_read)
-            #time.sleep(delay)
-            # update the progress bar
+            
         progress.update(i)
             
 
-    # close the client socket
+    #JDCP SE CIERRA LA COMUNICACION CON EL CLIENTE
     cliente.close()
-    # close the server socket
+    #JDCP SE CIERRA EL SERVIDOR
     server.close()
 def Envio_TCP_Server(host='167.71.243.238',port=9804):
     servidor,cliente,direccion= est_servidor(host,port)
@@ -70,23 +68,21 @@ def Envio_TCP_Server(host='167.71.243.238',port=9804):
     SEPARATOR = "<SEPARATOR>"
     filesize = os.path.getsize(filename)
     cliente.send(f"{filename}{SEPARATOR}{filesize}".encode())
-    # if comando ok 
+    
     progress = tqdm.tqdm(range(filesize),f"Sending {filename}",total=1,miniters=0.01,mininterval=0.001 ,unit="B", unit_scale=False, unit_divisor=1024)
     with open(filename, "rb") as f:
         for i in progress:
-            # read the bytes from the file
+            #JDCP SE LEE LOS BYTES DEL ARCHIVO DE AUDIO
             bytes_read = f.read(filesize)
             if not bytes_read:
-                # file transmitting is done
+                #JDCP ESTO SUCEDE CUANDO FINALIZA EL ENVIO 
             
                 break
-            # we use sendall to assure transimission in 
-            # busy networks
+            #JDCP ESTO SUCEDE MINETRA SE ENVIA CADA BYTE DE AUDIO
             cliente.sendall(bytes_read)
-            #time.sleep(delay)
-            # update the progress bar
+           # JDCP SE ACTULIZA EL VALOR DE LA BARRA QUE SE ESTA MOSTRANDO
             progress.update(len(bytes_read))         
-    # close the socket
+    # JDCP SE CORTA COMUNICACION CON EL CLIENTE Y SE CIERRA EL SERVIDOR TCP
     cliente.close()
     servidor.close()
 while True:
