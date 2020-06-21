@@ -18,7 +18,7 @@ try:
         mensaje = input('Ingrese mensaje: ')
         server.publicar(destino, mensaje)
         server.Recp_TCP_Server()
-        
+        time.sleep(2)
         server.Envio_TCP_Server()
 
 except KeyboardInterrupt:
