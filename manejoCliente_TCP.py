@@ -71,7 +71,7 @@ class Cliente(object):
         sock = socket.socket()
         #JDCP se indica se que esta intentando conectar al servidor
         logging.debug(f"[+] Intentando conectar al servidor y puerto {host}:{port}")
-        sock.connect((host= self.ip, sel.portTCP))
+        sock.connect((host=self.ip, self.portTCP))
         # si no hay errores entonces se conecta 
         logging.debug("[+] Conectado con el servidor.")
         return sock
