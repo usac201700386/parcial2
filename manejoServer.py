@@ -78,6 +78,8 @@ class Servidor():
             topico = ('salas' + '/' + self.grupo + '/' + sala[0][2:], self.qos)
             topicos.append(topico)
         archivo_salas.close()
+        #DAHM Se agrega comandos a la lista de tuplas
+        topicos.append(('comandos/14/#', self.qos))
         #DAHM Ya que se tiene una lista de tuplas con todos los elementos de los archivos de texto se subscribe el servidor
         client.subscribe(topicos[:])
         #DAHM Se comienza el thread demonio que ve si llega algun mensaje a alguno de estos topicos
