@@ -110,7 +110,9 @@ class Servidor():
         cliente.close()
         #JDCP SE CIERRA EL SERVIDOR
         server.close()
+        
     def Envio_TCP_Server(self):
+
         servidor,cliente,direccion= self.est_servidor()
         filename= 'Recp_server.wav'
         SEPARATOR = "<SEPARATOR>"

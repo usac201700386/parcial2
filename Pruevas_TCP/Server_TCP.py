@@ -85,6 +85,8 @@ def Envio_TCP_Server(host='167.71.243.238',port=9804):
     # JDCP SE CORTA COMUNICACION CON EL CLIENTE Y SE CIERRA EL SERVIDOR TCP
     cliente.close()
     servidor.close()
+
+    
 while True:
     logging.debug('ingrese 1 para recibir, 2 para enviar')
     entrada = int(input('ingrese su seleccion: '))
