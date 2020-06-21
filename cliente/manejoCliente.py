@@ -58,7 +58,7 @@ class Cliente(object):
         #DAHM Se le atribuyen a nuestra instancia estos handlers
         client.on_connect = on_connect 
         client.on_message = on_message 
-        client.on_publish = on_publish
+        client.on_publish = on_publish 
         #DAHM le seteamos el usuario y contraseña de la cuenta del broker mosquitto
         client.username_pw_set(self.user, self.passwd) 
 

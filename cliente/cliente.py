@@ -22,3 +22,4 @@ try:
 except KeyboardInterrupt:
     user.desconectar()
     logging.info('desconectado del broker!')
+
