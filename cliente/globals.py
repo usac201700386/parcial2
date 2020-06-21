@@ -13,8 +13,8 @@ USERS_FILE = 'usuarios.txt'
 ROOMS_FILE = 'salas.txt'
 
 #DAHM archivos de texto que utilizara para subscripciones el cliente
-USER_FILE = 'usuario.txt'
-ROOMS_USER_FILE = 'salas.txt'
+USER_FILE = 'cliente/usuario.txt'
+ROOMS_USER_FILE = 'cliente/salas.txt'
 
 #DAHM datos del grupo
 GROUP_ID = '04'
