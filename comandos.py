@@ -47,7 +47,7 @@ class instruccionR(object):
     #JICM el destino depende de si es una sala o un usuario
     def getDest(self):
         if self.strama[3]=='S' or self.strama[3]=='s':
-            return self.strama[1:6]
+            return self.strama[1:7]
         else:
             return self.strama[1:9]
     #el filesize solo retorna un valor si el comando era 1 o 2, pues los demás no llevan ese parámetro
@@ -55,7 +55,7 @@ class instruccionR(object):
         #que digitos corresponden al filsize depende de si el destinatario era una sala o un usuario
         if self.getCodigo()==(1 or 2):
             if self.strama[3]=='S' or self.strama[3]=='s':
-                return self.strama[6:]
+                return self.strama[7:]
             else:
                 return self.strama[9:]
 
