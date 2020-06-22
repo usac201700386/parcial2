@@ -73,7 +73,7 @@ class Servidor():
                 i6=instruccionS(6,ID)
                 logging.debug(i6.trama)
                 server.publicar('usuarios/'+ID, i6.trama)
-
+                logging.debug('levantando TCP')
                 server.Recp_TCP_Server()
                 
             else:
