@@ -59,7 +59,7 @@ class Servidor():
         def on_publish(client, userdata, mid): 
             self.publish_status= True
             publishText = "Publicacion satisfactoria"
-            logging.debug(publishText)
+            logging.debug(publishText + str(self.publish_status))
             
 
         #DAHM La funcion Handler que atiende el evento on_message (cuando llega algun mensaje a algun topic que esta subscrito el servidor)
