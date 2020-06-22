@@ -5,6 +5,9 @@ import tqdm
 import os
 import time
 from globals import *
+#JICM se importa la clase de manejo de instrucciones
+from clientes_unido import instruccionR
+from clientes_unido import instruccionS
 
 class Cliente(object):
     #DAHM ------------------------------------------    DAHM MQTT   ----------------------------------------------
@@ -54,6 +57,12 @@ class Cliente(object):
         #DAHM Funcion handler que configura el evento on_message (cuando llega un mensaje a alguno de los topicos que se esta subscrito)
         def on_message(client, userdata, msg):
             logging.info('mensaje recibido: ' + str(msg.payload) + 'del topico: ' + str(msg.topic))
+            #JICM se lee el usuario del archivo txt
+            archivo=open(self.usuario, 'r')
+            self.usuarioPropio=archivo.readline()
+            archivo.close()
+            #JICM se evalúa si lo que se recibe es un comando o un mensaje normal
+            Instruccion=instruccionR(msg.payload, self.usuarioPropio)
 
         #DAHM Se le atribuyen a nuestra instancia estos handlers
         client.on_connect = on_connect 
