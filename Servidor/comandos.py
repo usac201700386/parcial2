@@ -1,6 +1,8 @@
 #JICM se importan las librerías necesarias
 import binascii
 import logging
+from manejoServer_instrucciones import *
+
 #JICM se configura el logging
 logging.basicConfig(
     level = logging.DEBUG, 
@@ -39,9 +41,10 @@ class FaltanArgumentos(Exception):
         return str(self)
 #JICM se crea una clase de instrucciones recibidas, para obtener sus parámetros de manera facil con getters
 class instruccionR(object):
-    def __init__(self, trama):
+    def __init__(self, trama, origen):
         self.trama=trama
         self.strama=trama.decode()
+        self.origen= origen
     def getCodigo(self):
         return self.trama[0]
     #JICM el destino depende de si es una sala o un usuario
@@ -61,6 +64,9 @@ class instruccionR(object):
 
         else:
             logging.info('esta trama no incluye tamaño de archivo')
+
+
+
 
 
 
