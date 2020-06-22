@@ -83,7 +83,12 @@ class Servidor():
                 #time.sleep(5)
                 #server.Recp_TCP_Server()
                 
-                configurar_hilo()
+                 t1 = threading.Thread(name = 'Servidor TCP',
+                        target = server.Recp_TCP_Server(),
+                        args = (()),
+                        daemon = True
+                        )
+                t1.start()
             else:
                 logging.debug('la condición codigo=2 no se cumple')
 
@@ -287,12 +292,7 @@ class instruccionR(object):
     
 
 def configurar_hilo():
-    t1 = threading.Thread(name = 'Servidor TCP',
-                        target = server.Recp_TCP_Server(),
-                        args = (()),
-                        daemon = True
-                        )
-    t1.start()
+    pass
     
 #------------------------------------------------------------------------------------ 
 
