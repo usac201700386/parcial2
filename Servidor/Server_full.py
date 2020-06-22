@@ -96,8 +96,11 @@ class Servidor():
                 #JDCP ESTA FUNCION MANEJA EL ALVIE
                 #JDCP ESTE ES UN OBJETO PARA CONTROLAR EL ESTATUS DE ALIVE
                 i5 =instruccionS(5,ID)
-               
-                self.lista_actual.append(ID)
+
+                if (ID not in self.lista_actual):
+                    self.lista_actual.append(ID)
+                else: 
+                    pass
                 
                     
 
