@@ -96,10 +96,9 @@ class Servidor():
                 #JDCP ESTA FUNCION MANEJA EL ALVIE
                 #JDCP ESTE ES UN OBJETO PARA CONTROLAR EL ESTATUS DE ALIVE
                 i5 =instruccionS(5,ID)
-                if (ID not in self.lista_actual):
-                    self.lista_actual.append(ID)
-                else:
-                    pass
+               
+                self.lista_actual.append(ID)
+                
                     
 
                 #JDCP PUBLICAR ACK PARA EL ALIVE
@@ -320,15 +319,17 @@ def configurar_hilo():
     t1.start()
     
 def control_alive(lista_conectados=[],lista_actual=[]):
+    if(len(lista_conectados)==3):
+        lista_conectados.remove(lista_conectados[0])
+    lista_conectados.append(lista_actual)
+    lista_actual=[]
+    logging.debug('lista de conectados -> '+str(lista_conectados))
+    
+    
+def actualizar_conectados():
     while True:
-        if(len(lista_conectados)==3):
-            lista_conectados.remove(lista_conectados[0])
-        lista_conectados.append(lista_actual)
-        lista_actual=[]
-        logging.debug('lista de conectados -> '+str(lista_conectados))
+        control_alive(server.lista_conectados,server.lista_actual)
         time.sleep(2)
-    
-    
 
 
 
@@ -345,8 +346,8 @@ for topic in topics:
     print(topic[0])
 
 Hilo_conectados = threading.Thread(name = 'Refresca la lista de Conectaods',
-                        target = control_alive(),
-                        args = ((server.lista_conectados,server.lista_actual)),
+                        target = actualizar_conectados(),
+                        args = (()),
                         daemon = True
                         )
 
