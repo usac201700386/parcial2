@@ -81,7 +81,7 @@ class Servidor():
                 i6=instruccionS(6,ID)
                 logging.debug(i6.trama)
                 server.publicar('usuarios/'+ID, i6.trama)
-                logging.debug('levantando TCP')
+                logging.debug('valor de flag ->'+str(self.publish_status))
                 #server.Recp_TCP_Server()
                 #time.sleep(5)
                 #server.Recp_TCP_Server()
