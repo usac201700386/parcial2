@@ -38,7 +38,7 @@ class Servidor():
         self.salas = salas
         #DAHM Datos del grupo
         self.grupo = grupo
-        
+        self.publish_status = False
 
     #DAHM Configuracion inicial para que el servidor se vuelva subscriptor y publicador en el broker
     def configMQTT(self):
@@ -59,9 +59,11 @@ class Servidor():
         def on_publish(client, userdata, mid): 
             publishText = "Publicacion satisfactoria"
             logging.debug(publishText)
+            self.publish_status= True
 
         #DAHM La funcion Handler que atiende el evento on_message (cuando llega algun mensaje a algun topic que esta subscrito el servidor)
         def on_message(client, userdata, msg):
+            self.publish_status=False
             #Se muestra en pantalla informacion que ha llegado
             logging.info('mensaje recibido: ' + str(msg.payload) + 'del topico: ' + str(msg.topic))
             #JICM se lee el usuario del archivo txt
@@ -82,10 +84,11 @@ class Servidor():
                 logging.debug('levantando TCP')
                 #time.sleep(5)
                 #server.Recp_TCP_Server()
-                
-                
-                configurar_hilo()
+                if (self.publish_status):
+                    self.publish_status=False
+                    configurar_hilo()
             else:
+
                 logging.debug('la condición codigo=2 no se cumple')
 
             # esta funcion me tiene que devolver trama codificada
