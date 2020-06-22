@@ -6,7 +6,7 @@ import os
 from globals import *
 #JICM se importan las librerías necesarias
 import binascii
-
+import time
 
 class Servidor():
     #----------------------------------------------   DAHM MQTT   -------------------------------------------------
@@ -74,6 +74,7 @@ class Servidor():
                 logging.debug(i6.trama)
                 server.publicar('usuarios/'+ID, i6.trama)
                 logging.debug('levantando TCP')
+                time.sleep(5)
                 server.Recp_TCP_Server()
                 
             else:
