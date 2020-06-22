@@ -99,6 +99,7 @@ class Servidor():
                 self.lista_actual
                 with open('conectados','w') as file:
                     file.write(ID)
+                file.close()
 
                 #JDCP PUBLICAR ACK PARA EL ALIVE
                 server.publicar('usuarios/'+ID, i5.trama)
