@@ -100,7 +100,7 @@ class Servidor():
                 if (ID not in self.lista_actual):
                     self.lista_actual.append(ID)
                 else: 
-                    self.lista_actual.append([])
+                    self.lista_actual[:]=[]
                 
                     
 
