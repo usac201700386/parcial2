@@ -13,11 +13,12 @@ USERS_FILE = 'usuarios.txt'
 ROOMS_FILE = 'salas.txt'
 
 #DAHM archivos de texto que utilizara para subscripciones el cliente
-USER_FILE = 'cliente/usuario.txt'
-ROOMS_USER_FILE = 'cliente/salas.txt'
+#JICM cambie la dirección de los archivos que se había modificado al crear las carpetas
+USER_FILE = 'usuario.txt'
+ROOMS_USER_FILE = 'salas.txt'
 
 #DAHM datos del grupo
 GROUP_ID = '04'
 
 #DAHM Mas parametros de MQTT:
-QOS_LEVEL = 0
+QOS_LEVEL = 2

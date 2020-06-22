@@ -5,9 +5,13 @@ import tqdm
 import os
 import time
 from globals import *
-#JICM se importa la clase de manejo de instrucciones
-from clientes_unido import instruccionR
-from clientes_unido import instruccionS
+#JICM se importa para el manejo de mensajes a mostrar
+import threading #JICM Concurrencia con hilos
+#JICM se importan las librerías necesarias
+import binascii
+#JICM se importan las librerías para manejar hilos
+import threading #Concurrencia con hilos
+import sys       #Requerido para salir (sys.exit())
 
 class Cliente(object):
     #DAHM ------------------------------------------    DAHM MQTT   ----------------------------------------------
@@ -33,6 +37,11 @@ class Cliente(object):
         self.salas = salas
         #DAHM Datos del grupo
         self.grupo = grupo
+        #JICM se lee el usuario del archivo txt
+        archivo=open(self.usuario, 'r')
+        self.usuarioPropio=archivo.readline()
+        archivo.close()
+
 
     #DAHM Configuracion inicial para que el servidor se vuelva subscriptor y publicador en el broker
     def configMQTT(self):
@@ -57,12 +66,26 @@ class Cliente(object):
         #DAHM Funcion handler que configura el evento on_message (cuando llega un mensaje a alguno de los topicos que se esta subscrito)
         def on_message(client, userdata, msg):
             logging.info('mensaje recibido: ' + str(msg.payload) + 'del topico: ' + str(msg.topic))
-            #JICM se lee el usuario del archivo txt
-            archivo=open(self.usuario, 'r')
-            self.usuarioPropio=archivo.readline()
-            archivo.close()
             #JICM se evalúa si lo que se recibe es un comando o un mensaje normal
-            Instruccion=instruccionR(msg.payload, self.usuarioPropio)
+            Instruccion=instruccionR(msg.payload)
+            codigo=Instruccion.getCodigo()
+            logging.debug(type(Instruccion.getCodigo()))
+            #JICM acción cuando se recibe un FRR
+            if (codigo==2):
+                i2=instruccionS(6,str(self.usuarioPropio))
+                #user.publicar('comandos/04/'+str(self.usuarioPropio), i2.trama)
+                logging.debug(i2.trama)
+                user.publicar('salas/04/S3', i2.trama)
+            else:
+                logging.debug('la condición codigo=2 no se cumple')
+            #JICM acción cuando se recibe un ok
+            if (codigo==6):
+                logging.info('reconoció el código 6')
+                #JICM se incializa el hilo de TCP
+                configurarhilo()
+
+
+                
 
         #DAHM Se le atribuyen a nuestra instancia estos handlers
         client.on_connect = on_connect 
@@ -195,6 +218,70 @@ class Cliente(object):
     #-----------------------------------------------------------------------------------
 
 
+#JICM se crea la clase de instrucciones a enviar
+class instruccionS(object):
+    #JICM se inicializa el objeto, filseize es un argumento opcional
+    def __init__(self, codigo, dest, filesize=''):
+        self.codigo='0'+ str(codigo)#JICM se crea el código de la instrucción para que sea un str con dos numeros
+        self.dest=str(dest)
+        self.filesize=filesize
+        #JICM se codifica en hexadecimal y en lista de bytes
+        self.codigohex=binascii.unhexlify(self.codigo)
+        self.destbytes=self.dest.encode()
+        self.filesizebytes=str(self.filesize).encode()
+        self.trama=(self.codigohex+self.destbytes+self.filesizebytes)
+        #JICM Se envía error si desean crear la instrucción 01 pero no añaden filesize
+        if self.codigo=='01' and self.filesize=='':
+            raise FaltanArgumentos
+    #JICM se sobreescriben los metodos str y repr para facilitar la comprensión de los objetos        
+    def __str__(self):
+        return str(self.trama)
+
+    def __repr__(self):
+        return str(self)
+#JICM se crea la excepción para cuando faltan argumentos
+class FaltanArgumentos(Exception):
+    def __init__(self):
+        pass
+
+    def __str__(self):
+        return "No se especifico tamaño de archivo o destinatario"
+    
+    def __repr__(self):
+        return str(self)
+#JICM se crea una clase de instrucciones recibidas, para obtener sus parámetros de manera facil con getters
+class instruccionR(object):
+    def __init__(self, trama):
+        self.trama=trama
+        self.strama=trama.decode()
+    def getCodigo(self):
+        return self.trama[0]
+    #JICM el destino depende de si es una sala o un usuario
+    def getDest(self):
+        if self.strama[3]=='S' or self.strama[3]=='s':
+            return self.strama[1:7]
+        else:
+            return self.strama[1:9]
+    #JICM el filesize solo retorna un valor si el comando era 1 o 2, pues los demás no llevan ese parámetro
+    def getFilesize(self):
+        #JICM que digitos corresponden al filsize depende de si el destinatario era una sala o un usuario
+        if self.getCodigo()==(2):
+            if self.strama[3]=='S' or self.strama[3]=='s':
+                return self.strama[7:]
+            else:
+                return self.strama[9:]
+        else:
+            logging.info('esta trama no incluye tamaño de archivo')
+        
+
+
+
+
+
+
+
+
+
 def Audio_create(filename='audio.wav',duracion=3):
     logging.info('inicia grabacion')
     os.system('arecord -d '+str(duracion)+' -f U8 -r 8000 '+filename)
@@ -203,12 +290,51 @@ def Audio_create(filename='audio.wav',duracion=3):
     filesize = os.path.getsize(filename)
     return filename , filesize
 
-#---------------------solo para prueba-----------------------------
-'''Audio_create()
 
-cli=Cliente()
+#---------------------MAIN----------------------
+########################################333333
+############################################
 
-cli.Envio_TCP_Client()
-time.sleep(5)
-cli.Recp_TCP_Client'''
-#-------------------------------------------------------------------
+
+#JICM se inicializa el cliente creando un objeto de esa clase
+user = Cliente()
+#JICM se llaman los métodos para configurar MQTT, conectar y suscribirse a los tópicos para este user
+user.configMQTT()
+user.conectar()
+user.subscripcion()
+#imprime al usuario los usuarios que son sus contactos
+destinos = user.topicos()
+print('----------   CONTACTOS   -------- \n')
+for destino in destinos:
+    logging.info('está suscrito a ' + str(destino))
+print('--------------------------------- \n')
+time.sleep(1)
+
+#JICM se configura el hilo para enviar con TCP
+def configurarhilo():
+    time.sleep(3)
+    t1 = threading.Thread(name = 'Envío TCP',
+                            target = user.Envio_TCP_Client(),
+                            args = (()),
+                            daemon = True
+                            )
+    t1.start()
+
+try:
+    while True:
+        inst=input('si desea enviar un mensaje, ingreselo ahora, si desea enviar un archivo, ingrese "1" \n')
+        topico = input('A donde desea enviar su mensaje o archivo? \n')
+        if inst==('3'):
+            logging.info('a continuación iniciará la grabación')
+            Audio_create()
+            tamaño = input("ingrese el tamaño del archivo \n")
+            i1=instruccionS(3,topico,tamaño)
+            user.publicar('comandos/04/'+ str(user.usuarioPropio), i1.trama)
+            
+        else:
+            user.publicar(topico, inst)
+
+
+except KeyboardInterrupt:
+    user.desconectar()
+    logging.info('desconectado del broker!')
