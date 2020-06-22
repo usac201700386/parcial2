@@ -80,17 +80,24 @@ class Servidor():
             codigo=Instruccion.getCodigo()
             #logging.debug(type(Instruccion.getCodigo()))
             if (codigo==3):
+                #JDCP ESTA FLAG ACTIVA EL OK PARA RECIBIR ARCHIVOS
                 self.publish_status=True
-                #server.Recp_TCP_Server()
+                #JDCP ESTE OBJETO MANDA LA TRAMA PARA EL OK
                 i6=instruccionS(6,ID)
                 logging.debug(i6.trama)
+                #JDCP SE PUBLICA EL OK
                 server.publicar('usuarios/'+ID, i6.trama)
                 logging.debug('valor de flag ->'+str(self.publish_status))
-                #server.Recp_TCP_Server()
-                #time.sleep(5)
-                #server.Recp_TCP_Server()
-        
-                
+                #JDCP ACK
+                i5=instruccionS(5,ID)
+                #JDCP SE PUBLICA EL ACK
+                server.publicar('usuarios/'+ID, i5.trama)
+            elif(codigo==4):
+                #JDCP ESTA FUNCION MANEJA EL ALVIE
+                #JDCP ESTE ES UN OBJETO PARA CONTROLAR EL ESTATUS DE ALIVE
+                i5= instruccionS(5,ID)
+                #JDCP PUBLICAR ACK PARA EL ALIVE
+                server.publicar('usuarios/'+ID, i5.trama)
                 
             else:
 
@@ -228,6 +235,7 @@ class Servidor():
         cliente.close()
         servidor.close()
     
+    
     #-----------------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------------
@@ -305,6 +313,8 @@ def configurar_hilo():
                         )
     t1.start()
     
+def alive():
+
 #------------------------------------------------------------------------------------ 
 
 
