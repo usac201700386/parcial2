@@ -154,7 +154,7 @@ class Servidor():
         servidor.bind((self.ip,self.portTCP))
 
         servidor.listen(5)
-        logging.debug(f"[*] Esperando conexion en {self.ip}:{self.portTCP}")
+        logging.debug(f"[*] Esperando conexion TCP en {self.ip}:{self.portTCP}")
         #JDCP se obtine la informacion del cliente que se conecto al servicio
         client_socket, address = servidor.accept() # datos el 
         #JDCP SE AVISA POR MEDIO DE LOGGING QUE SE HA CONECTADO AL SERVIDOR
