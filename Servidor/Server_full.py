@@ -37,8 +37,8 @@ class Servidor():
         #DAHM Datos del grupo
         self.grupo = grupo
         self.publish_status = False
-        self.lista_actual = []      #JDCP ESTA LISTA ALMACENA LOS ALIVES DE TODOS LOS USAURIO ACTUALES
-        self.lista_conectados = []  #JDCP ESTA LISTAL ALMACENA LOS USUARIOS CONECTADOS EN 3 CICLOS DE ALIVE
+        #self.lista_actual = []      #JDCP ESTA LISTA ALMACENA LOS ALIVES DE TODOS LOS USAURIO ACTUALES
+        #self.lista_conectados = []  #JDCP ESTA LISTAL ALMACENA LOS USUARIOS CONECTADOS EN 3 CICLOS DE ALIVE
 
     #DAHM Configuracion inicial para que el servidor se vuelva subscriptor y publicador en el broker
     def configMQTT(self):
@@ -96,10 +96,10 @@ class Servidor():
                 #JDCP ESTA FUNCION MANEJA EL ALVIE
                 #JDCP ESTE ES UN OBJETO PARA CONTROLAR EL ESTATUS DE ALIVE
                 i5 =instruccionS(5,ID)
+                self.lista_actual
+                with open('conectados','w') as file:
+                    file.write(ID)
 
-                self.lista_actual.append(ID)
-                self.lista_actual[:]=[]
-                
                 #JDCP PUBLICAR ACK PARA EL ALIVE
                 server.publicar('usuarios/'+ID, i5.trama)
                 
@@ -317,19 +317,6 @@ def configurar_hilo():
                         )
     t1.start()
 
-def control_alive(lista_conectados=[],lista_actual=[]):
-    if(len(lista_conectados)==3):
-        lista_conectados.remove(lista_conectados[0])
-    lista_conectados.append(lista_actual)
-    
-    #lista_actual[:]=[]
-    logging.debug('lista de conectados -> '+str(lista_conectados))
-    
-    
-def actualizar_conectados():
-    while True:
-        control_alive(server.lista_conectados,server.lista_actual)
-        time.sleep(2)
 
 
 
@@ -345,13 +332,6 @@ topics = server.topicos()
 for topic in topics:
     print(topic[0])
 
-Hilo_conectados = threading.Thread(name = 'Refresca la lista de Conectaods',
-                        target = actualizar_conectados(),
-                        args = (()),
-                        daemon = True
-                        )
-
-Hilo_conectados.start()
 
 
 try:
