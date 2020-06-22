@@ -7,6 +7,12 @@ from globals import *
 #JICM se importan las librerías necesarias
 import binascii
 import time
+#JDCP libreria de Hilos
+
+import threading #Concurrencia con hilos
+import logging   #Logging
+import sys       #Requerido para salir (sys.exit())
+
 
 class Servidor():
     #----------------------------------------------   DAHM MQTT   -------------------------------------------------
@@ -75,7 +81,8 @@ class Servidor():
                 server.publicar('usuarios/'+ID, i6.trama)
                 logging.debug('levantando TCP')
                 #time.sleep(5)
-                server.Recp_TCP_Server()
+                #server.Recp_TCP_Server()
+                t1.start()
                 
             else:
                 logging.debug('la condición codigo=2 no se cumple')
@@ -291,6 +298,11 @@ topics = server.topicos()
 for topic in topics:
     print(topic[0])
 
+t1 = threading.Thread(name = 'Servidor TCP',
+                        target = server.Recp_TCP_Server(),
+                        args = (()),
+                        daemon = True
+                        )
 
 try:
     while True:
