@@ -75,7 +75,7 @@ class Servidor():
                 server.publicar('usuarios/'+ID, i6.trama)
                 logging.debug('levantando TCP')
                 time.sleep(5)
-                server.Recp_TCP_Server()
+                #server.Recp_TCP_Server()
                 
             else:
                 logging.debug('la condición codigo=2 no se cumple')
