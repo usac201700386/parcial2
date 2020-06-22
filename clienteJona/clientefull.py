@@ -56,7 +56,8 @@ class Cliente(object):
         #DAHM Funcion handler que configura el evento on_connect (cuando se logra conectar al broker el cliente)
         def on_connect(client, userdata, flags, rc): 
             connectionText = "CONNACK recibido del broker con codigo: " + str(rc)
-            logging.info(connectionText)
+            configurarhiloALIVE()
+            logging.debug(connectionText)#no quiero que se lo muestre al usuario, solo para debug
 
         #DAHM Funcion handler que configura el evento on_publish (cuando se logra publicar con exito en el topico seleccionado)
         def on_publish(client, userdata, mid): 
@@ -76,13 +77,14 @@ class Cliente(object):
                 #user.publicar('comandos/04/'+str(self.usuarioPropio), i2.trama)
                 logging.debug(i2.trama)
                 user.publicar('salas/04/S3', i2.trama)
-            else:
-                logging.debug('la condición codigo=2 no se cumple')
-            #JICM acción cuando se recibe un ok
-            if (codigo==6):
+            #JICM accion cuando se recibe un ok    
+            elif (codigo==6):
                 logging.info('reconoció el código 6')
                 #JICM se incializa el hilo de TCP
-                configurarhilo()
+                configurarhiloTCP()
+            #JICM accion cuando se recibe un ack
+            elif (codigo==5):
+                logging.debug('se recibió un ack')
 
 
                 
@@ -214,6 +216,13 @@ class Cliente(object):
         logging.info('termina reproduccion')
         #JDCP se desconecta de cliente TCP al recibir el archivo
         sock.close()
+    #JICM codigo que se manda a llamar del hilo de alive
+    def envioAlive(self):
+        alive=instruccionS(4,self.usuarioPropio)
+        while True:
+            self.publicar('comandos/04/'+ str(self.usuarioPropio), alive.trama)
+            time.sleep(2)
+            
     
     #-----------------------------------------------------------------------------------
 
@@ -308,10 +317,10 @@ print('----------   CONTACTOS   -------- \n')
 for destino in destinos:
     logging.info('está suscrito a ' + str(destino))
 print('--------------------------------- \n')
-time.sleep(1)
+#time.sleep(1)
 
 #JICM se configura el hilo para enviar con TCP
-def configurarhilo():
+def configurarhiloTCP():
     time.sleep(3)
     t1 = threading.Thread(name = 'Envío TCP',
                             target = user.Envio_TCP_Client(),
@@ -319,10 +328,18 @@ def configurarhilo():
                             daemon = True
                             )
     t1.start()
+#JICM Se configura el hilo para enviar los alive cada dos segundos
+def configurarhiloALIVE():
+    t2 = threading.Thread(name = 'enviar ALIVE',
+                        target = user.envioAlive(),
+                        args = (()),
+                        daemon = True
+                        )
+    t2.start()
 
 try:
     while True:
-        inst=input('si desea enviar un mensaje, ingreselo ahora, si desea enviar un archivo, ingrese "1" \n')
+        inst=input('si desea enviar un mensaje, ingreselo ahora, si desea enviar un archivo, ingrese "3" \n')
         topico = input('A donde desea enviar su mensaje o archivo? \n')
         if inst==('3'):
             logging.info('a continuación iniciará la grabación')
