@@ -38,7 +38,7 @@ class Servidor():
         self.grupo = grupo
         self.publish_status = False
         #self.lista_actual = []      #JDCP ESTA LISTA ALMACENA LOS ALIVES DE TODOS LOS USAURIO ACTUALES
-        #self.lista_conectados = []  #JDCP ESTA LISTAL ALMACENA LOS USUARIOS CONECTADOS EN 3 CICLOS DE ALIVE
+        self.lista_conectados = []  #JDCP ESTA LISTAL ALMACENA LOS USUARIOS CONECTADOS EN 3 CICLOS DE ALIVE
 
     #DAHM Configuracion inicial para que el servidor se vuelva subscriptor y publicador en el broker
     def configMQTT(self):
@@ -65,9 +65,10 @@ class Servidor():
                     configurar_hilo()
             self.publish_status= False
             
-
+       
         #DAHM La funcion Handler que atiende el evento on_message (cuando llega algun mensaje a algun topic que esta subscrito el servidor)
         def on_message(client, userdata, msg):
+            
             #self.publish_status=False
             #Se muestra en pantalla informacion que ha llegado
             logging.info('mensaje recibido: ' + str(msg.payload) + 'del topico: ' + str(msg.topic))
@@ -96,10 +97,15 @@ class Servidor():
                 #JDCP ESTA FUNCION MANEJA EL ALVIE
                 #JDCP ESTE ES UN OBJETO PARA CONTROLAR EL ESTATUS DE ALIVE
                 i5 =instruccionS(5,ID)
-                self.lista_actual
-                with open('conectados','w') as file:
-                    file.write(ID)
-                file.close()
+                
+                #self.lista_conectados.append(ID)
+                if (len(self.lista_conectados)==3):
+                    LOG_FILENAME = 'CONECTADOS'
+                    logCommand = 'echo '+str(self.lista_conectados)+' >> '+LOG_FILENAME
+                    os.system(logCommand)
+                    self.lista_conectados[:]=[]
+                else:
+                    self.lista_conectados.append(ID[0:-1])
 
                 #JDCP PUBLICAR ACK PARA EL ALIVE
                 server.publicar('usuarios/'+ID, i5.trama)
