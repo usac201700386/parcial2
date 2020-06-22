@@ -98,6 +98,7 @@ class Servidor():
                 i5 =instruccionS(5,ID)
 
                 self.lista_actual.append(ID)
+                self.lista_actual[:]=[]
                 
                 #JDCP PUBLICAR ACK PARA EL ALIVE
                 server.publicar('usuarios/'+ID, i5.trama)
@@ -320,8 +321,8 @@ def control_alive(lista_conectados=[],lista_actual=[]):
     if(len(lista_conectados)==3):
         lista_conectados.remove(lista_conectados[0])
     lista_conectados.append(lista_actual)
-    if (len(lista_actual)>0):
-        lista_actual[:]=[]
+    
+    #lista_actual[:]=[]
     logging.debug('lista de conectados -> '+str(lista_conectados))
     
     
