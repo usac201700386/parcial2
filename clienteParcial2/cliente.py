@@ -8,14 +8,14 @@ user.conectar()
 user.subscripcion()
 
 destinos = user.topicos()
-print('----------   CONTACTOS   -------- \n')
+print('----------   TOPICOS A LOS QUE SE ESTA SUBSCRITO   -------- ')
 for destino in destinos:
     print(destino[0])
 
 try:
     while True:
 
-        topico = input('A donde desea enviar un mensaje? ')
+        topico = input('\n\n A donde desea enviar un mensaje? ')
         mensaje = input('Ingrese mensaje: ')
         user.publicar(topico, mensaje)
 

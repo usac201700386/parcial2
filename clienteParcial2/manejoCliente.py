@@ -11,25 +11,26 @@ class Cliente(object):
     #DAHM Metodo constructor del objeto de la clase cliente que toma como parametros las constantes del archivo
     #DAHM globals.py, toma todos los parametros necessarios para crear una instancia de mqtt.Client y una de socket
     #DAHM tambien toma como parametros los archivos de texto a los cuales se va a subscribir el cliente y el qos.  
-    def __init__(self, ip = HOST, portMQTT = MQTT_PORT, portTCP = TCP_HOST,
+    def __init__(self, ip = HOST, portMQTT = MQTT_PORT,
                 user = MQTT_USUARIO, passwd = MQTT_KEY, qos = QOS_LEVEL,
                 x = mqtt.Client(clean_session=True),
                 usuario = USER_FILE, salas = ROOMS_USER_FILE,
-                grupo = GROUP_ID):
-        #DAHM atributos de la clase servidor para crear instancia de mqtt.Client y de socket
+                grupo = GROUP_ID, buff = BUFFER):
+        #DAHM atributos de la clase servidor para crear instancia de mqtt.Client
         self.ip = ip
         self.portMQTT = portMQTT
-        self.portTCP = portTCP
         self.user = user
         self.passwd = passwd
         self.qos = qos
         #DAHM la instancia tambien es un atributo sobre el cual se trabaja todo el protocolo MQTT
         self.x = x
         #DAHM Estos son los archivos de texto donde se lleva el control de las salas y del usuario
-        self.usuario = usuario
+        self. usuario = usuario
         self.salas = salas
         #DAHM Datos del grupo
         self.grupo = grupo
+        #DAHM Parametros para manejar el audio
+        self.buff = buff
 
     #DAHM Configuracion inicial para que el servidor se vuelva subscriptor y publicador en el broker
     def configMQTT(self):
@@ -81,6 +82,7 @@ class Cliente(object):
         #DAHM Se crean las tuplas con los topicos del usuario y su qos
         topicos.append(('comandos/' + self.grupo + '/' + usuario, self.qos))
         topicos.append(('usuarios/' + usuario, 0))
+        topicos.append(('archivos/' + self.grupo + '/' + usuario, self.qos))
         #DAHM cerramos el archivo
         archivo_usuario.close()
 
@@ -97,6 +99,10 @@ class Cliente(object):
         #DAHM esta funcion retorna una lista de tuplas con los topicos a los que se subscribe el cliente y el qos
         return topicos
 
+    #DAHM Este metodo graba audio del cliente para luego enviarlo
+    def grabarAudio(self, file, duracion):
+        os.system('arecord -d ' +  str(duracion) + ' -f U8 -r 8000 ' + str(file))
+
     #DAHM Esta funcion es la analogia de publish de paho
     def publicar(self, topico, mensaje):
         client = self.x
@@ -111,95 +117,3 @@ class Cliente(object):
     def desconectar(self):
         client = self.x
         client.disconnect()
-    #-----------------------------------------------------------------------------------
-    #------------JDCP TCP----------------
-    #JDCP creando el TCP socket
-    def est_connect(self):
-        #JDCP se crea el socket a utilizar
-        sock = socket.socket()
-        #JDCP se indica se que esta intentando conectar al servidor
-        logging.debug(f"[+] Intentando conectar al servidor y puerto {self.ip}:{self.portTCP}")
-        sock.connect((self.ip, self.portTCP))
-        # si no hay errores entonces se conecta 
-        logging.debug("[+] Conectado con el servidor.")
-        return sock
-    def Envio_TCP_Client (self):
-        filename='audio.wav'
-        filesize=os.path.getsize(filename)
-        #se manda la informacion del comando FTR , destino y peso del archivo
-        SEPARATOR = "<SEPARATOR>" # solamente servira para dierencia la informacion comandos 
-        sock= self.est_connect()
-
-        sock.send(f"{filename}{SEPARATOR}{filesize}".encode())
-        filesize=int(filesize)
-        progress = tqdm.tqdm(range(filesize),f"Sending {filename}",total=1,miniters=0.01,mininterval=0.001 ,unit="B", unit_scale=False, unit_divisor=1024)
-        with open(filename, "rb") as f:
-            for _ in progress:
-                # read the bytes from the file
-                bytes_read = f.read(filesize)
-                if not bytes_read:
-                    # file transmitting is done
-                
-                    break
-                # we use sendall to assure transimission in 
-                # busy networks
-                sock.sendall(bytes_read)
-                #time.sleep(delay)
-                # update the progress bar
-                progress.update(len(bytes_read))         
-        # close the socket
-        sock.close()
-
-    def Recp_TCP_Client (self):
-        #JDCP ESTABLECIENDO COMUNICAICOND CON EL SERVIDOR PARA RECIBIR ARCHIVOS
-        time.sleep(0.05)
-        sock= self.est_connect()
-        received = sock.recv(64*1024).decode()
-        SEPARATOR = "<SEPARATOR>" 
-        filename, filesize = received.split(SEPARATOR)
-        # remove absolute path if there is
-        filename = 'REB_CLIENTE.wav'#os.path.basename(filename)
-        # convert to integer
-        filesize = int(filesize)
-
-        progress = tqdm.tqdm(range(filesize), f"Receiving {filename}", total=1,unit="B", unit_scale=True, unit_divisor=0.1)
-        with open(filename, "wb") as f:
-            for i in progress:
-                # read 1024 bytes from the socket (receive)
-                bytes_read = sock.recv(filesize)
-                
-                if not bytes_read:    
-                    # nothing is received
-                    # file transmitting is done
-                    
-                    break
-                #JDCP SE ESCRIBE EL ARCHVIO QUE ES RECIBIDO
-                f.write(bytes_read)
-            
-            progress.update(i)
-        logging.info('inicia reproduccion')
-        os.system('aplay '+filename)
-        logging.info('termina reproduccion')
-        #JDCP se desconecta de cliente TCP al recibir el archivo
-        sock.close()
-    
-    #-----------------------------------------------------------------------------------
-
-
-def Audio_create(filename='audio.wav',duracion=3):
-    logging.info('inicia grabacion')
-    os.system('arecord -d '+str(duracion)+' -f U8 -r 8000 '+filename)
-    logging.info('termina grabacion')
-    #JDCP se obtiene el tamano del archivo de grabacion
-    filesize = os.path.getsize(filename)
-    return filename , filesize
-
-#---------------------solo para prueba-----------------------------
-'''Audio_create()
-
-cli=Cliente()
-
-cli.Envio_TCP_Client()
-time.sleep(5)
-cli.Recp_TCP_Client'''
-#-------------------------------------------------------------------
