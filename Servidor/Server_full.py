@@ -97,13 +97,8 @@ class Servidor():
                 #JDCP ESTE ES UN OBJETO PARA CONTROLAR EL ESTATUS DE ALIVE
                 i5 =instruccionS(5,ID)
 
-                if (ID not in self.lista_actual):
-                    self.lista_actual.append(ID)
-                else: 
-                    pass
+                self.lista_actual.append(ID)
                 
-                    
-
                 #JDCP PUBLICAR ACK PARA EL ALIVE
                 server.publicar('usuarios/'+ID, i5.trama)
                 
