@@ -83,7 +83,7 @@ class Servidor():
                 #time.sleep(5)
                 #server.Recp_TCP_Server()
                 
-                 t1 = threading.Thread(name = 'Servidor TCP',
+                t1 = threading.Thread(name = 'Servidor TCP',
                         target = server.Recp_TCP_Server(),
                         args = (()),
                         daemon = True
