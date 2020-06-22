@@ -20,4 +20,4 @@ ROOMS_USER_FILE = 'salas.txt'
 GROUP_ID = '04'
 
 #DAHM Mas parametros de MQTT:
-QOS_LEVEL = 0
+QOS_LEVEL = 1
