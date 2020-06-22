@@ -82,8 +82,8 @@ class Servidor():
                 logging.debug('levantando TCP')
                 #time.sleep(5)
                 #server.Recp_TCP_Server()
-                t1.start()
                 
+                configurar_hilo()
             else:
                 logging.debug('la condición codigo=2 no se cumple')
 
@@ -286,6 +286,14 @@ class instruccionR(object):
             logging.info('esta trama no incluye tamaño de archivo')
     
 
+def configurar_hilo():
+    t1 = threading.Thread(name = 'Servidor TCP',
+                        target = server.Recp_TCP_Server(),
+                        args = (()),
+                        daemon = True
+                        )
+    t1.start()
+    
 #------------------------------------------------------------------------------------ 
 
 
