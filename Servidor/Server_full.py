@@ -59,7 +59,7 @@ class Servidor():
         def on_publish(client, userdata, mid): 
             publishText = "Publicacion satisfactoria"
             logging.debug(publishText)
-            
+            self.publish_status= True
 
         #DAHM La funcion Handler que atiende el evento on_message (cuando llega algun mensaje a algun topic que esta subscrito el servidor)
         def on_message(client, userdata, msg):
@@ -67,9 +67,7 @@ class Servidor():
             #Se muestra en pantalla informacion que ha llegado
             logging.info('mensaje recibido: ' + str(msg.payload) + 'del topico: ' + str(msg.topic))
             #JICM se lee el usuario del archivo txt
-            #archivo=open(self.usuario, 'r')
-            #self.usuarioPropio=archivo.readline()
-            #archivo.close()
+
             #JICM se evalúa si lo que se recibe es un comando o un mensaje normal
             Instruccion=instruccionR(msg.payload)
             ID= str(msg.topic)[-10:]
@@ -82,9 +80,10 @@ class Servidor():
                 logging.debug(i6.trama)
                 server.publicar('usuarios/'+ID, i6.trama)
                 logging.debug('levantando TCP')
+                #server.Recp_TCP_Server()
                 #time.sleep(5)
                 #server.Recp_TCP_Server()
-                
+        
                 if (self.publish_status):
                     self.publish_status=False
                     configurar_hilo()
@@ -138,7 +137,7 @@ class Servidor():
     def publicar(self, topico, mensaje):
         client = self.x
         client.publish(topico, mensaje, self.qos, retain = False)
-        self.publish_status= True
+        
 
     #DAHM conecta al broker la instancia creada en __init__
     def  conectar(self):
