@@ -322,7 +322,7 @@ def configurar_hilo():
 def control_alive(lista_conectados=[],lista_actual=[]):
     while True:
         if(len(lista_conectados)==3):
-            lista_conectados[0].remove
+            lista_conectados.remove(lista_conectados[0])
         lista_conectados.append(lista_actual)
         lista_actual=[]
         logging.debug('lista de conectados -> '+str(lista_conectados))
