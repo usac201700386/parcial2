@@ -64,7 +64,7 @@ class Servidor():
 
         #DAHM La funcion Handler que atiende el evento on_message (cuando llega algun mensaje a algun topic que esta subscrito el servidor)
         def on_message(client, userdata, msg):
-            self.publish_status=False
+            #self.publish_status=False
             #Se muestra en pantalla informacion que ha llegado
             logging.info('mensaje recibido: ' + str(msg.payload) + 'del topico: ' + str(msg.topic))
             #JICM se lee el usuario del archivo txt
@@ -76,6 +76,7 @@ class Servidor():
             codigo=Instruccion.getCodigo()
             #logging.debug(type(Instruccion.getCodigo()))
             if (codigo==3):
+                self.publish_status=False
                 #server.Recp_TCP_Server()
                 i6=instruccionS(6,ID)
                 logging.debug(i6.trama)
@@ -88,6 +89,7 @@ class Servidor():
                 if (self.publish_status):
                     self.publish_status=False
                     configurar_hilo()
+                
             else:
 
                 logging.debug('la condición codigo=2 no se cumple')
