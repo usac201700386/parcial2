@@ -73,7 +73,7 @@ class Servidor():
                 i6=instruccionS(6,ID)
                 logging.debug(i6.trama)
                 server.publicar('usuarios/'+ID, i6.trama)
-                
+
                 server.Recp_TCP_Server()
                 
             else:
@@ -157,6 +157,7 @@ class Servidor():
         #JDCP se obtiene todos los parametros y objetos de la funcion que levanta el servidor TCP
         server,cliente,_ = self.est_servidor()
         #SE ESTA ATENTO A LA INFORMACION QUE SE RECIBE DEL TCP SOBRE EL TAMANO DEL ARCHIVO
+        logging.debug('inicia la recepcion del archivo')
         received = cliente.recv(64*1024).decode()
         SEPARATOR = "<SEPARATOR>"
         #SE ESTABLECE EL NOMBRE DEL ARCHIVO QUE SE ALMACENA EN EL servido
