@@ -288,6 +288,7 @@ class instruccionR(object):
     
 
 def configurar_hilo():
+    time.sleep(3)
     t1 = threading.Thread(name = 'Servidor TCP',
                         target = server.Recp_TCP_Server(),
                         args = (()),
