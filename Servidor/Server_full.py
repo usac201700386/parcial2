@@ -100,7 +100,7 @@ class Servidor():
                 if (ID not in self.lista_actual):
                     self.lista_actual.append(ID)
                 else: 
-                    self.lista_actual[:]=[]
+                    pass
                 
                     
 
@@ -320,12 +320,12 @@ def configurar_hilo():
                         daemon = True
                         )
     t1.start()
-    
+
 def control_alive(lista_conectados=[],lista_actual=[]):
     if(len(lista_conectados)==3):
         lista_conectados.remove(lista_conectados[0])
     lista_conectados.append(lista_actual)
-    lista_actual=[]
+    lista_actual[:]=[]
     logging.debug('lista de conectados -> '+str(lista_conectados))
     
     
