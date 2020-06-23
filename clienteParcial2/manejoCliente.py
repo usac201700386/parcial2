@@ -1,6 +1,7 @@
 import paho.mqtt.client as mqtt
 import logging
 import os
+import threading
 from globals import *
 
 class Cliente(object):
@@ -56,7 +57,7 @@ class Cliente(object):
             if ('audio' in str(msg.topic)) :
                 logging.debug('Recibiendo audio...')
                 #DAHM Se manda a llamar el metodo para recibir audio y guardarlo en el nombre de la carpeta que aparece en globals
-                self.recibirAudio(msg.payload)
+                self.hilo_recibirAudio(msg.payload)
                 logging.info('Audio recibido de: ' + str(msg.topic))
             #DAHM Cuando el topico es de un chat de usuario o sala lo desplega
             else:
@@ -120,6 +121,14 @@ class Cliente(object):
         f.close()
         byteArray = bytearray(binario)
         self.publicar('audio/' + self.grupo + '/' + destino, byteArray)
+    
+    def hilo_recibirAudio(self, file):
+        hiloRA = threading.Thread(name = 'Recibir Audio',
+                        target = self.recibirAudio,
+                        args = (file,),
+                        daemon = False
+                        )
+        hiloRA.start()
 
     #JICM Este metodo recibe el archivo de audio por y lo decodifica
     def recibirAudio(self, bytearrayR):
