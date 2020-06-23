@@ -29,8 +29,8 @@ MQTT_KEY = 'proyectos980'
 #ROOMS_FILE = 'salas.txt'
 
 #DAHM archivos de texto que utilizara para subscripciones el cliente
-USER_FILE = 'clienteParcial2/usuario.txt'
-ROOMS_USER_FILE = 'clienteParcial2/salas.txt'
+USER_FILE = 'usuario.txt'
+ROOMS_USER_FILE = 'salas.txt'
 
 #DAHM datos del grupo
 GROUP_ID = '04'
@@ -39,5 +39,5 @@ GROUP_ID = '04'
 QOS_LEVEL = 1
 
 #DAHM constantes para la grabacion
-FILENAME = 'clienteParcial2/nuevaGrabacion.wav'
-FILENAME_R = 'clienteParcial2/grabacionRecibida.wav'
+FILENAME = 'nuevaGrabacion.wav'
+FILENAME_R = 'grabacionRecibida.wav'
