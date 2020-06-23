@@ -24,4 +24,4 @@ QOS_LEVEL = 1
 
 #DAHM constantes para la grabacion
 FILENAME = 'clienteParcial2/nuevaGrabacion.wav'
-FILENAME_R = 'clienteParcial2grabacionRecibida.wav'
+FILENAME_R = 'clienteParcial2/grabacionRecibida.wav'
