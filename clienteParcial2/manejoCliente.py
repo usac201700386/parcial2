@@ -1,7 +1,6 @@
 import paho.mqtt.client as mqtt
 import logging
 import os
-import threading
 from globals import *
 
 class Cliente(object):
@@ -57,7 +56,7 @@ class Cliente(object):
             if ('audio' in str(msg.topic)) :
                 logging.debug('Recibiendo audio...')
                 #DAHM Se manda a llamar el metodo para recibir audio y guardarlo en el nombre de la carpeta que aparece en globals
-                self.hilo_recibirAudio(msg.payload)
+                self.recibirAudio(msg.payload)
                 logging.info('Audio recibido de: ' + str(msg.topic))
             #DAHM Cuando el topico es de un chat de usuario o sala lo desplega
             else:
@@ -113,15 +112,7 @@ class Cliente(object):
     #DAHM Este metodo graba audio del cliente para luego enviarlo
     def grabarAudio(self, file, duracion):
         os.system('arecord -d ' +  str(duracion) + ' -f U8 -r 8000 ' + str(file))
-    #JDCP SE CONFIGURA EL HILO DE GRABAR AUDIO PARA QUE FUNCIONE COMO TAREA INDEPENDIENTE
-    def hilo_grabarAudio(self,file,duracion):
-        audio_grabar = threading.Thread(name = 'GRABAR',
-                            target = self.grabarAudio,# METODO QUE CONTROLA LA GRABACION
-                            args = ((file,duracion)),#ARGUMENTOS DE LA FUNCION
-                            daemon = False
-                            )
-        #JDCP SE INICIA EL HILO
-        audio_grabar.start()
+
     #JICM Este metodo envia archivos de audio por MQTT
     def enviarAudio(self, file, destino):
         f = open(file, 'rb')
@@ -129,14 +120,6 @@ class Cliente(object):
         f.close()
         byteArray = bytearray(binario)
         self.publicar('audio/' + self.grupo + '/' + destino, byteArray)
-    #JDCP HILO PARA ENVIAR AUDIO
-    def hilo_enviarAudio(self,file,destino):
-        audio_envio = threading.Thread(name = 'ENVIAR',
-                            target = self.enviarAudio,#JDCP METODO QUE CONTROLA EL ENVIO
-                            args = ((file,destino)),#JDCP AGUMENTOS
-                            daemon = False
-                            )
-        audio_envio.start()
 
     #JICM Este metodo recibe el archivo de audio por y lo decodifica
     def recibirAudio(self, bytearrayR):
@@ -148,14 +131,7 @@ class Cliente(object):
         #JDCP ESTA FUNCION REPODUCE EL AUDIO AUTOMATICAMENTE
         os.system('aplay '+ dir)
         logging.info('termina reproduccion')
-    #JDCP HILO DE RECIBIR EL AUDIO 
-    def hilo_recibirAudio(self,nombre):
-        audio = threading.Thread(name = 'RECIBIR',
-                            target = self.recibirAudio,# JDCP METODO QUE CONTROLA LA RECEPCION
-                            args = ((nombre)),#JDCP ARGUMENTOS
-                            daemon = False
-                            )
-        audio.start()
+ 
 
     #DAHM Esta funcion es la analogia de publish de paho
     def publicar(self, topico, mensaje):
@@ -197,5 +173,3 @@ class sala_invalida(Exception):
         return "Formato de sala invalido"
     def __repr__(self):
         return str(self)
-
-
