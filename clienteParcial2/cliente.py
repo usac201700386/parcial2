@@ -35,7 +35,7 @@ try:
                 #JICM manejo de la excepción si el usuario es invalido, para que se reinicie el programa
                 #en vez de cerrarse por completo                   
                 except (InvalidUser, ValueError):
-                    logging.exception('el usuario debe de ser de 9 números')
+                    logging.error('el usuario debe de ser de 9 números')
 
             elif opcion2 == 'b':
                 sala = input('A que sala desea enviar el mensaje?\n')
@@ -61,7 +61,7 @@ try:
                 #JICM manejo de la excepción si el usuario es invalido, para que se reinicie el programa
                 #en vez de cerrarse por completo
                 except (InvalidUser, ValueError):
-                    logging.exception('el usuario debe de ser de 9 números')
+                    logging.error('el usuario debe de ser de 9 números')
 
             elif opcion2 == 'b':
                 sala = input('A que sala desea enviar el audio?\n')
