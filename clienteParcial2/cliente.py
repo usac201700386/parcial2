@@ -41,7 +41,7 @@ try:
                 sala = input('A que sala desea enviar el audio?\n')
                 duracion = input('Ingrese duracion del audio: \n')
                 user.grabarAudio(audio, duracion)
-                user.enviarAudio(audio, sala)
+                user.enviarAudio(audio, "S"+sala)
             else:
                 print('opcion incorrecta\n')
         else:
