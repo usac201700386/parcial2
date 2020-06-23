@@ -154,7 +154,6 @@ class Cliente(object):
     def desconectar(self):
         client = self.x
         client.disconnect()
-<<<<<<< HEAD
 #JICM se crea el error para cuando el carnet no es valido
 class InvalidUser(Exception):
     def __init__(self):
@@ -165,7 +164,6 @@ class InvalidUser(Exception):
     
     def __repr__(self):
         return str(self)
-=======
 #JDCP este error se levanta si el usario no ingreso un caracter valido de la insturcciones
 class Seleccion_invalida(Exception):
     def __init__(self):
@@ -174,4 +172,3 @@ class Seleccion_invalida(Exception):
         return "Porfavor ingrese un numero o letra valida"
     def __repr__(self):
         return str(self)
->>>>>>> a46966a84806e1da1b2f731697353c08c4a3b2e2

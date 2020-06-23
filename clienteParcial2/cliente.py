@@ -1,5 +1,6 @@
 from manejoCliente import Cliente
 from manejoCliente import InvalidUser
+from manejoCliente import Seleccion_invalida
 import logging
 from globals import *
 
