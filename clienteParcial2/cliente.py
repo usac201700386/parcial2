@@ -3,7 +3,7 @@ from manejoCliente import InvalidUser
 from manejoCliente import Seleccion_invalida
 import logging
 from globals import *
-
+#JDCP A MI ME TOCO TCP POR ESO NO HAY MUCHOS COMENTARIOS DE MI PARTE EN ESTE CODIGO XD
 grupo = GROUP_ID
 audio = FILENAME
 user = Cliente()
@@ -41,6 +41,7 @@ try:
             opcion2 = input('a. Enviar a usuario\nb. Enviar a sala\n')
             if opcion2 == 'a':
                 try:
+                    #JDCP LE DICE AL USUARIO QUE INGRESE LOS PARAMETROS DEL AUDIO
                     usuario = input('A que usuario desea enviar el audio?\n')
                     if len(usuario)!=9:
                         raise InvalidUser
@@ -58,6 +59,7 @@ try:
             else:
                 raise Seleccion_invalida
         else:
+            #JDCP LEVANTA ERRO SI EL USUARIO NO SELECCIONA LA OPCINES PROPUESTAS
             raise Seleccion_invalida
 
 except KeyboardInterrupt:
