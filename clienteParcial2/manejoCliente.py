@@ -1,6 +1,7 @@
 import paho.mqtt.client as mqtt
 import logging
 import os
+import threading
 from globals import *
 
 class Cliente(object):
@@ -56,7 +57,7 @@ class Cliente(object):
             if ('audio' in str(msg.topic)) :
                 logging.debug('Recibiendo audio...')
                 #DAHM Se manda a llamar el metodo para recibir audio y guardarlo en el nombre de la carpeta que aparece en globals
-                self.recibirAudio(msg.payload)
+                self.hilo_audio(msg.payload)
                 logging.info('Audio recibido de: ' + str(msg.topic))
             #DAHM Cuando el topico es de un chat de usuario o sala lo desplega
             else:
@@ -131,7 +132,13 @@ class Cliente(object):
         #JDCP ESTA FUNCION REPODUCE EL AUDIO AUTOMATICAMENTE
         os.system('aplay '+ dir)
         logging.info('termina reproduccion')
- 
+    def hilo_audio(self,nombre):
+        audio = threading.Thread(name = 'loquesea',
+                            target = self.recibirAudio,
+                            args = ((nombre)),
+                            daemon = False
+                            )
+        audio.start()
 
     #DAHM Esta funcion es la analogia de publish de paho
     def publicar(self, topico, mensaje):
@@ -173,3 +180,5 @@ class sala_invalida(Exception):
         return "Formato de sala invalido"
     def __repr__(self):
         return str(self)
+
+
