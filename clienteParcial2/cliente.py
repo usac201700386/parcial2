@@ -66,8 +66,8 @@ try:
                         if (len(usuario)!=9):
                             raise InvalidUser
                         duracion = input('Ingrese duracion del audio: \n')
-                        user.grabarAudio(audio, duracion)
-                        user.enviarAudio(audio, usuario)
+                        user.hilo_grabarAudio(audio, duracion)
+                        user.hilo_enviarAudio(audio, usuario)
                     #JICM manejo de la excepción si el usuario es invalido, para que se reinicie el programa
                     #en vez de cerrarse por completo
                     except (InvalidUser, ValueError):
@@ -78,9 +78,9 @@ try:
                         sala = input('A que sala desea enviar el audio?\n')
                         if (sala.isdigit()):
                             duracion = input('Ingrese duracion del audio: \n')
-                            user.grabarAudio(audio, duracion)
+                            user.hilo_grabarAudio(audio, duracion)
                             #JICM se configura para que envíe correctamente a las salas
-                            user.enviarAudio(audio, "S"+sala)
+                            user.hilo_enviarAudio(audio, "S"+sala)
                         else:
                             raise Seleccion_invalida
                         #JDCP SI EL USUARIO COMETE EL ERROR DE INGRESAR CARACTERES NO NUMERICOS

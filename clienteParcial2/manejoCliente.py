@@ -110,9 +110,25 @@ class Cliente(object):
         #DAHM esta funcion retorna una lista de tuplas con los topicos a los que se subscribe el cliente y el qos
         return topicos
 
+    def hilo_grabarAudio(self, file, duracion):
+        hiloGA = threading.Thread(name = 'grabar Audio',
+                        target = self.grabarAudio,
+                        args = (file,duracion),
+                        daemon = False
+                        )
+        hiloGA.start()
+
     #DAHM Este metodo graba audio del cliente para luego enviarlo
     def grabarAudio(self, file, duracion):
         os.system('arecord -d ' +  str(duracion) + ' -f U8 -r 8000 ' + str(file))
+
+    def hilo_enviarAudio(self, file, duracion):
+        hiloEA = threading.Thread(name = 'Enviar Audio',
+                        target = self.enviarAudio,
+                        args = (file,duracion),
+                        daemon = False
+                        )
+        hiloEA.start()
 
     #JICM Este metodo envia archivos de audio por MQTT
     def enviarAudio(self, file, destino):
