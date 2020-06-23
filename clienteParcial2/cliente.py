@@ -27,13 +27,14 @@ try:
                 #JICM levantar excepcion si el usuario es invalido
                 try:
                     usuario = input('A que usuario desea enviar el mensaje?\n')
+                    int(usuario)
                     if len(usuario)!=9:
                         raise InvalidUser
                     mensaje = input('Escriba su mensaje:\n')
                     user.publicar('usuarios/' + usuario, mensaje)
                 #JICM manejo de la excepción si el usuario es invalido, para que se reinicie el programa
                 #en vez de cerrarse por completo                   
-                except (InvalidUser, TypeError):
+                except (InvalidUser, ValueError):
                     logging.exception('el usuario debe de ser de 9 números')
 
             elif opcion2 == 'b':
@@ -59,7 +60,7 @@ try:
                     user.enviarAudio(audio, usuario)
                 #JICM manejo de la excepción si el usuario es invalido, para que se reinicie el programa
                 #en vez de cerrarse por completo
-                except (InvalidUser, TypeError):
+                except (InvalidUser, ValueError):
                     logging.exception('el usuario debe de ser de 9 números')
 
             elif opcion2 == 'b':
