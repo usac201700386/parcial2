@@ -23,6 +23,7 @@ try:
         if opcion1 == '1':
             opcion2 = input('a. Enviar a usuario\nb. Enviar a sala\n')
             if opcion2 == 'a':
+                #JICM levantar excepcion si el usuario es invalido
                 try:
                     usuario = input('A que usuario desea enviar el mensaje?\n')
                     if len(usuario)!=9:
@@ -40,6 +41,7 @@ try:
         elif opcion1 == '2':
             opcion2 = input('a. Enviar a usuario\nb. Enviar a sala\n')
             if opcion2 == 'a':
+                #JICM levantar excepción si el usuario es invalido
                 try:
                     usuario = input('A que usuario desea enviar el audio?\n')
                     if len(usuario)!=9:
