@@ -4,6 +4,7 @@ from manejoCliente import Seleccion_invalida
 import logging
 from globals import *
 #JDCP A MI ME TOCO TCP POR ESO NO HAY MUCHOS COMENTARIOS DE MI PARTE EN ESTE CODIGO XD
+#JICM A MI ME TOCO MANEJO DE INSTRUCCIONES, POR ESO TAMPOCO MUCHOS COMENTARIOS MIOS EN ESTE CODIGO XD
 grupo = GROUP_ID
 audio = FILENAME
 user = Cliente()
