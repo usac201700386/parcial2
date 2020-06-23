@@ -15,7 +15,7 @@ class Cliente(object):
                 user = MQTT_USUARIO, passwd = MQTT_KEY, qos = QOS_LEVEL,
                 x = mqtt.Client(clean_session=True),
                 usuario = USER_FILE, salas = ROOMS_USER_FILE,
-                grupo = GROUP_ID, buff = BUFFER):
+                grupo = GROUP_ID, direccion = FILENAME_R):
         #DAHM atributos de la clase servidor para crear instancia de mqtt.Client
         self.ip = ip
         self.portMQTT = portMQTT
@@ -30,11 +30,15 @@ class Cliente(object):
         #DAHM Datos del grupo
         self.grupo = grupo
         #DAHM Parametros para manejar el audio
-        self.buff = buff
+        self.direccion = direccion
 
     #DAHM Configuracion inicial para que el servidor se vuelva subscriptor y publicador en el broker
     def configMQTT(self):
         client = self.x
+
+        file = open(self.usuario, 'r')
+        usuario = file.readline()
+        file.close()
 
         #DAHM Se configura el logging en modo DEBUG para observar mensajes desde este nivel
         logging.basicConfig(
@@ -54,7 +58,16 @@ class Cliente(object):
 
         #DAHM Funcion handler que configura el evento on_message (cuando llega un mensaje a alguno de los topicos que se esta subscrito)
         def on_message(client, userdata, msg):
-            logging.info('mensaje recibido: ' + str(msg.payload) + 'del topico: ' + str(msg.topic))
+            #DAHM Revisa si el topico es un archivo para recibirlo con el metodo especifico para esto
+            if (str(msg.topic) == 'archivos/' + self.grupo + '/' + usuario) :
+                logging.debug('Recibiendo audio...')
+                #DAHM Se manda a llamar el metodo para recibir audio y guardarlo en el nombre de la carpeta que aparece en globals
+                self.recibirAudio(msg.payload)
+                logging.info('Audio recibido de:' + str(msg.topic))
+            #DAHM Cuando el topico es de un chat de usuario o sala lo desplega
+            else:
+                logging.info('mensaje recibido: ' + str(msg.payload) + 'del topico: ' + str(msg.topic))
+
 
         #DAHM Se le atribuyen a nuestra instancia estos handlers
         client.on_connect = on_connect 
@@ -102,6 +115,22 @@ class Cliente(object):
     #DAHM Este metodo graba audio del cliente para luego enviarlo
     def grabarAudio(self, file, duracion):
         os.system('arecord -d ' +  str(duracion) + ' -f U8 -r 8000 ' + str(file))
+
+    #JICM Este metodo envia archivos de audio por MQTT
+    def enviarAudio(self, file, destino):
+        f = open(file, 'rb')
+        binario = f.read()
+        f.close()
+        byteArray = bytearray(binario)
+        self.publicar('archivos/' + self.grupo + '/' + destino, byteArray)
+
+    #JICM Este metodo recibe el archivo de audio por y lo decodifica
+    def recibirAudio(self, bytearrayR):
+        dir = self.direccion
+        audioR = open(dir, 'wb')
+        audioR.write(bytearrayR)
+        audioR.close()
+ 
 
     #DAHM Esta funcion es la analogia de publish de paho
     def publicar(self, topico, mensaje):

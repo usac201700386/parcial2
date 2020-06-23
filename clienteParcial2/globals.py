@@ -23,5 +23,5 @@ GROUP_ID = '04'
 QOS_LEVEL = 1
 
 #DAHM constantes para la grabacion
-#FILENAME = 'nuevaGrabacion.wav'
-BUFFER = 64 * 1024 #64 KB
+FILENAME = 'clienteParcial2/nuevaGrabacion.wav'
+FILENAME_R = 'clienteParcial2grabacionRecibida.wav'
