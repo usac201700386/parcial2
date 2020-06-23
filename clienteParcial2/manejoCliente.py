@@ -162,7 +162,6 @@ class Seleccion_invalida(Exception):
     def __init__(self):
         pass
     def __str__(self):
-        logging.exception( "Porfavor ingrese un numero o letra valida")
-        pass
+        return "Porfavor ingrese un numero o letra valida"
     def __repr__(self):
         return str(self)
