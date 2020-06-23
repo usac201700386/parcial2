@@ -57,7 +57,7 @@ class Cliente(object):
             if ('audio' in str(msg.topic)) :
                 logging.debug('Recibiendo audio...')
                 #DAHM Se manda a llamar el metodo para recibir audio y guardarlo en el nombre de la carpeta que aparece en globals
-                self.hilo_audio(msg.payload)
+                self.hilo_recibirAudio(msg.payload)
                 logging.info('Audio recibido de: ' + str(msg.topic))
             #DAHM Cuando el topico es de un chat de usuario o sala lo desplega
             else:
@@ -113,7 +113,13 @@ class Cliente(object):
     #DAHM Este metodo graba audio del cliente para luego enviarlo
     def grabarAudio(self, file, duracion):
         os.system('arecord -d ' +  str(duracion) + ' -f U8 -r 8000 ' + str(file))
-
+    def hilo_grabarAudio(self,file,duracion):
+        audio_grabar = threading.Thread(name = 'loquesea',
+                            target = self.grabarAudio,
+                            args = ((file,duracion)),
+                            daemon = False
+                            )
+        audio_grabar.start()
     #JICM Este metodo envia archivos de audio por MQTT
     def enviarAudio(self, file, destino):
         f = open(file, 'rb')
@@ -121,6 +127,14 @@ class Cliente(object):
         f.close()
         byteArray = bytearray(binario)
         self.publicar('audio/' + self.grupo + '/' + destino, byteArray)
+
+    def hilo_enviarAudio(self,file,destino):
+        audio_envio = threading.Thread(name = 'loquesea',
+                            target = self.enviarAudio,
+                            args = ((file,destino)),
+                            daemon = False
+                            )
+        audio_envio.start()
 
     #JICM Este metodo recibe el archivo de audio por y lo decodifica
     def recibirAudio(self, bytearrayR):
@@ -132,7 +146,8 @@ class Cliente(object):
         #JDCP ESTA FUNCION REPODUCE EL AUDIO AUTOMATICAMENTE
         os.system('aplay '+ dir)
         logging.info('termina reproduccion')
-    def hilo_audio(self,nombre):
+
+    def hilo_recibirAudio(self,nombre):
         audio = threading.Thread(name = 'loquesea',
                             target = self.recibirAudio,
                             args = ((nombre)),
