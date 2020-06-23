@@ -1,9 +1,25 @@
+'''
+--------------------------   GRUPO 04    -----------------------------
+PARCIAL 2: Implementar una aplicacion de mensajeria instantanea con
+mensajes de texto, audio y salas de chat TODO BASADO EN MQTT.
+
+INSTRUCCIONES DE USO: En usuarios.txt se escribe el carnet del cliente,
+en salas.txt se ingresan las salas a las que va a pertenecer.
+
+Integrantes:    Diego Andres Herrera Morales        201700804
+                Jose Daniel Campos Pol              201700386
+                Jonathan Israel Cobar Mendoza       201701042
+
+Curso: Proyectos de computacion aplicados a I.E
+Catedratico: M.Sc Ivan Morales
+'''
+
+
+
 #DAHM direccion IP del servidor
 HOST = '167.71.243.238'
 #DAHM puerto de conexion para MQTT
 MQTT_PORT = 1883
-#DAHM puerto de conexion para TCP
-#TCP_HOST = 9804
 #DAHM credenciales del broker MQTT
 MQTT_USUARIO = 'proyectos'
 MQTT_KEY = 'proyectos980'

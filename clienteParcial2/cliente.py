@@ -14,9 +14,9 @@ user.conectar()
 user.subscripcion()
 
 destinos = user.topicos()
-print('----------   TOPICOS A LOS QUE SE ESTA SUBSCRITO   -------- ')
+logging.info(('----------   TOPICOS A LOS QUE SE ESTA SUBSCRITO   -------- '))
 for destino in destinos:
-    print(destino[0])
+    logging.info((destino[0]))
 
 try:
     while True:
@@ -25,34 +25,39 @@ try:
             opcion2 = input('a. Enviar a usuario\nb. Enviar a sala\n')
             if opcion2 == 'a':
                 #JICM levantar excepcion si el usuario es invalido
-                try:
-                    usuario = input('A que usuario desea enviar el mensaje?\n')
-                    if len(usuario)!=9:
-                        raise InvalidUser
+                #try:
+                usuario = input('A que usuario desea enviar el mensaje?\n')
+                if len(usuario)!=9:
+                    raise InvalidUser
+                else:
                     mensaje = input('Escriba su mensaje:\n')
                     user.publicar('usuarios/' + usuario, mensaje)
-                except:
-                    InvalidUser
+                #except:
+                    #InvalidUser
+
             elif opcion2 == 'b':
                 sala = input('A que sala desea enviar el mensaje?\n')
                 mensaje = input('Escriba su mensaje:\n')
                 user.publicar('salas/' + grupo + '/S' + sala, mensaje)
+
             else:
                 raise Seleccion_invalida
+
         elif opcion1 == '2':
             opcion2 = input('a. Enviar a usuario\nb. Enviar a sala\n')
             if opcion2 == 'a':
                 #JICM levantar excepción si el usuario es invalido
-                try:
+                #try:
                     #JDCP LE DICE AL USUARIO QUE INGRESE LOS PARAMETROS DEL AUDIO
-                    usuario = input('A que usuario desea enviar el audio?\n')
-                    if len(usuario)!=9:
-                        raise InvalidUser
+                usuario = input('A que usuario desea enviar el audio?\n')
+                if len(usuario)!=9:
+                    raise InvalidUser
+                else:
                     duracion = input('Ingrese duracion del audio: \n')
                     user.grabarAudio(audio, duracion)
                     user.enviarAudio(audio, usuario)
-                except:
-                    InvalidUser
+                #except:
+                    #InvalidUser
             elif opcion2 == 'b':
                 sala = input('A que sala desea enviar el audio?\n')
                 duracion = input('Ingrese duracion del audio: \n')
@@ -62,7 +67,7 @@ try:
             else:
                 raise Seleccion_invalida
         else:
-            #JDCP LEVANTA ERRO SI EL USUARIO NO SELECCIONA LA OPCINES PROPUESTAS
+            #JDCP LEVANTA ERRO SI EL USUARIO NO SELECCIONA LA OPCIONES PROPUESTAS
             raise Seleccion_invalida
 
 except KeyboardInterrupt:

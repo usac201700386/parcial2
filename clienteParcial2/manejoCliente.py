@@ -1,15 +1,12 @@
 import paho.mqtt.client as mqtt
 import logging
-import socket
-import tqdm
 import os
-import time
 from globals import *
 
 class Cliente(object):
     #DAHM ------------------------------------------    DAHM MQTT   ----------------------------------------------
     #DAHM Metodo constructor del objeto de la clase cliente que toma como parametros las constantes del archivo
-    #DAHM globals.py, toma todos los parametros necessarios para crear una instancia de mqtt.Client y una de socket
+    #DAHM globals.py, toma todos los parametros necessarios para crear una instancia de mqtt.Client
     #DAHM tambien toma como parametros los archivos de texto a los cuales se va a subscribir el cliente y el qos.  
     def __init__(self, ip = HOST, portMQTT = MQTT_PORT,
                 user = MQTT_USUARIO, passwd = MQTT_KEY, qos = QOS_LEVEL,
@@ -36,14 +33,10 @@ class Cliente(object):
     def configMQTT(self):
         client = self.x
 
-        file = open(self.usuario, 'r')
-        usuario = file.readline()
-        file.close()
-
         #DAHM Se configura el logging en modo DEBUG para observar mensajes desde este nivel
         logging.basicConfig(
         level = logging.DEBUG, 
-        format = '[%(levelname)s] (%(processName)-10s) %(message)s'
+        format = '[%(levelname)s] %(message)s'
         )
 
         #DAHM Funcion handler que configura el evento on_connect (cuando se logra conectar al broker el cliente)
@@ -60,11 +53,11 @@ class Cliente(object):
         def on_message(client, userdata, msg):
             #DAHM Revisa si el topico es un archivo para recibirlo con el metodo especifico para esto
             #JICM generaliza para que si se encuentra la palagra archivos reciba el audio
-            if ('archivos' in str(msg.topic)) :
+            if ('audio' in str(msg.topic)) :
                 logging.debug('Recibiendo audio...')
                 #DAHM Se manda a llamar el metodo para recibir audio y guardarlo en el nombre de la carpeta que aparece en globals
                 self.recibirAudio(msg.payload)
-                logging.info('Audio recibido de:' + str(msg.topic))
+                logging.info('Audio recibido de: ' + str(msg.topic))
             #DAHM Cuando el topico es de un chat de usuario o sala lo desplega
             else:
                 logging.info('mensaje recibido: ' + str(msg.payload) + 'del topico: ' + str(msg.topic))
@@ -96,7 +89,7 @@ class Cliente(object):
         #DAHM Se crean las tuplas con los topicos del usuario y su qos
         topicos.append(('comandos/' + self.grupo + '/' + usuario, self.qos))
         topicos.append(('usuarios/' + usuario, 0))
-        topicos.append(('archivos/' + self.grupo + '/' + usuario, self.qos))
+        topicos.append(('audio/' + self.grupo + '/' + usuario, self.qos))
         #DAHM cerramos el archivo
         archivo_usuario.close()
 
@@ -108,7 +101,7 @@ class Cliente(object):
             topico = ('salas' + '/' + self.grupo + '/' + sala[0][2:], self.qos)
             topicos.append(topico)
             #JICM se añaden la suscripcion a las salas de archivos
-            topico = ('archivos' + '/' + self.grupo + '/' + sala[0][2:], self.qos)
+            topico = ('audio' + '/' + self.grupo + '/' + sala[0][2:], self.qos)
             topicos.append(topico)
         #DAHM cerramos el archivo
         archivo_salas.close()
@@ -126,7 +119,7 @@ class Cliente(object):
         binario = f.read()
         f.close()
         byteArray = bytearray(binario)
-        self.publicar('archivos/' + self.grupo + '/' + destino, byteArray)
+        self.publicar('audio/' + self.grupo + '/' + destino, byteArray)
 
     #JICM Este metodo recibe el archivo de audio por y lo decodifica
     def recibirAudio(self, bytearrayR):
@@ -136,7 +129,7 @@ class Cliente(object):
         audioR.close()
         logging.info('inicia reproduccion')
         #JDCP ESTA FUNCION REPODUCE EL AUDIO AUTOMATICAMENTE
-        os.system('aplay '+dir)
+        os.system('aplay '+ dir)
         logging.info('termina reproduccion')
  
 
