@@ -35,7 +35,7 @@ try:
                 mensaje = input('Escriba su mensaje:\n')
                 user.publicar('salas/' + grupo + '/S' + sala, mensaje)
             else:
-                print('opcion incorrecta\n')
+                raise Seleccion_invalida
         elif opcion1 == '2':
             opcion2 = input('a. Enviar a usuario\nb. Enviar a sala\n')
             if opcion2 == 'a':
@@ -55,9 +55,9 @@ try:
                 #JICM se configura para que envíe correctamente a las salas
                 user.enviarAudio(audio, "S"+sala)
             else:
-                print('opcion incorrecta\n')
+                raise Seleccion_invalida
         else:
-            print('opcion incorrecta\n')
+            raise Seleccion_invalida
 
 except KeyboardInterrupt:
     user.desconectar()
