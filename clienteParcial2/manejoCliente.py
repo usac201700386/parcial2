@@ -165,3 +165,11 @@ class Seleccion_invalida(Exception):
         return "Porfavor ingrese un numero o letra valida"
     def __repr__(self):
         return str(self)
+#JDCP este error se levanta si el usuario quiere mandar algo a una sala no valida por ejemplo salas/04/a
+class sala_invalida(Exception):
+    def __init__(self):
+        pass
+    def __str__(self):
+        return "Formato de sala invalido"
+    def __repr__(self):
+        return str(self)
