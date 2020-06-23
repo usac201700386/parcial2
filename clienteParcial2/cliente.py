@@ -1,4 +1,5 @@
 from manejoCliente import Cliente
+from manejoCliente import InvalidUser
 import logging
 from globals import *
 
@@ -21,9 +22,14 @@ try:
         if opcion1 == '1':
             opcion2 = input('a. Enviar a usuario\nb. Enviar a sala\n')
             if opcion2 == 'a':
-                usuario = input('A que usuario desea enviar el mensaje?\n')
-                mensaje = input('Escriba su mensaje:\n')
-                user.publicar('usuarios/' + usuario, mensaje)
+                try:
+                    usuario = input('A que usuario desea enviar el mensaje?\n')
+                    if len(usuario)!=9:
+                        raise InvalidUser
+                    mensaje = input('Escriba su mensaje:\n')
+                    user.publicar('usuarios/' + usuario, mensaje)
+                except:
+                    InvalidUser
             elif opcion2 == 'b':
                 sala = input('A que sala desea enviar el mensaje?\n')
                 mensaje = input('Escriba su mensaje:\n')
@@ -33,10 +39,15 @@ try:
         elif opcion1 == '2':
             opcion2 = input('a. Enviar a usuario\nb. Enviar a sala\n')
             if opcion2 == 'a':
-                usuario = input('A que usuario desea enviar el audio?\n')
-                duracion = input('Ingrese duracion del audio: \n')
-                user.grabarAudio(audio, duracion)
-                user.enviarAudio(audio, usuario)
+                try:
+                    usuario = input('A que usuario desea enviar el audio?\n')
+                    if len(usuario)!=9:
+                        raise InvalidUser
+                    duracion = input('Ingrese duracion del audio: \n')
+                    user.grabarAudio(audio, duracion)
+                    user.enviarAudio(audio, usuario)
+                except:
+                    InvalidUser
             elif opcion2 == 'b':
                 sala = input('A que sala desea enviar el audio?\n')
                 duracion = input('Ingrese duracion del audio: \n')

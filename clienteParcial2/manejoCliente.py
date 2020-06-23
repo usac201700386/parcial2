@@ -150,3 +150,13 @@ class Cliente(object):
     def desconectar(self):
         client = self.x
         client.disconnect()
+#JICM se crea el error para cuando el carnet no es valido
+class InvalidUser(Exception):
+    def __init__(self):
+        pass
+
+    def __str__(self):
+        return "El usuario debe de contener nueve números"
+    
+    def __repr__(self):
+        return str(self)
