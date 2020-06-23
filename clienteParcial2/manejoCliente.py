@@ -113,12 +113,14 @@ class Cliente(object):
     #DAHM Este metodo graba audio del cliente para luego enviarlo
     def grabarAudio(self, file, duracion):
         os.system('arecord -d ' +  str(duracion) + ' -f U8 -r 8000 ' + str(file))
+    #JDCP SE CONFIGURA EL HILO DE GRABAR AUDIO PARA QUE FUNCIONE COMO TAREA INDEPENDIENTE
     def hilo_grabarAudio(self,file,duracion):
-        audio_grabar = threading.Thread(name = 'loquesea',
-                            target = self.grabarAudio,
-                            args = ((file,duracion)),
+        audio_grabar = threading.Thread(name = 'GRABAR',
+                            target = self.grabarAudio,# METODO QUE CONTROLA LA GRABACION
+                            args = ((file,duracion)),#ARGUMENTOS DE LA FUNCION
                             daemon = False
                             )
+        #JDCP SE INICIA EL HILO
         audio_grabar.start()
     #JICM Este metodo envia archivos de audio por MQTT
     def enviarAudio(self, file, destino):
@@ -127,11 +129,11 @@ class Cliente(object):
         f.close()
         byteArray = bytearray(binario)
         self.publicar('audio/' + self.grupo + '/' + destino, byteArray)
-
+    #JDCP HILO PARA ENVIAR AUDIO
     def hilo_enviarAudio(self,file,destino):
-        audio_envio = threading.Thread(name = 'loquesea',
-                            target = self.enviarAudio,
-                            args = ((file,destino)),
+        audio_envio = threading.Thread(name = 'ENVIAR',
+                            target = self.enviarAudio,#JDCP METODO QUE CONTROLA EL ENVIO
+                            args = ((file,destino)),#JDCP AGUMENTOS
                             daemon = False
                             )
         audio_envio.start()
@@ -146,11 +148,11 @@ class Cliente(object):
         #JDCP ESTA FUNCION REPODUCE EL AUDIO AUTOMATICAMENTE
         os.system('aplay '+ dir)
         logging.info('termina reproduccion')
-
+    #JDCP HILO DE RECIBIR EL AUDIO 
     def hilo_recibirAudio(self,nombre):
-        audio = threading.Thread(name = 'loquesea',
-                            target = self.recibirAudio,
-                            args = ((nombre)),
+        audio = threading.Thread(name = 'RECIBIR',
+                            target = self.recibirAudio,# JDCP METODO QUE CONTROLA LA RECEPCION
+                            args = ((nombre)),#JDCP ARGUMENTOS
                             daemon = False
                             )
         audio.start()
