@@ -25,15 +25,16 @@ try:
             opcion2 = input('a. Enviar a usuario\nb. Enviar a sala\n')
             if opcion2 == 'a':
                 #JICM levantar excepcion si el usuario es invalido
-                #try:
-                usuario = input('A que usuario desea enviar el mensaje?\n')
-                if len(usuario)!=9:
-                    raise InvalidUser
-                else:
+                try:
+                    usuario = input('A que usuario desea enviar el mensaje?\n')
+                    if len(usuario)!=9:
+                        raise InvalidUser
                     mensaje = input('Escriba su mensaje:\n')
                     user.publicar('usuarios/' + usuario, mensaje)
-                #except:
-                    #InvalidUser
+                #JICM manejo de la excepción si el usuario es invalido, para que se reinicie el programa
+                #en vez de cerrarse por completo                   
+                except (InvalidUser, TypeError):
+                    logging.exception('el usuario debe de ser de 9 números')
 
             elif opcion2 == 'b':
                 sala = input('A que sala desea enviar el mensaje?\n')
@@ -47,17 +48,20 @@ try:
             opcion2 = input('a. Enviar a usuario\nb. Enviar a sala\n')
             if opcion2 == 'a':
                 #JICM levantar excepción si el usuario es invalido
-                #try:
+                try:
                     #JDCP LE DICE AL USUARIO QUE INGRESE LOS PARAMETROS DEL AUDIO
-                usuario = input('A que usuario desea enviar el audio?\n')
-                if len(usuario)!=9:
-                    raise InvalidUser
-                else:
+                    usuario = input('A que usuario desea enviar el audio?\n')
+                    int(usuario)
+                    if (len(usuario)!=9):
+                        raise InvalidUser
                     duracion = input('Ingrese duracion del audio: \n')
                     user.grabarAudio(audio, duracion)
                     user.enviarAudio(audio, usuario)
-                #except:
-                    #InvalidUser
+                #JICM manejo de la excepción si el usuario es invalido, para que se reinicie el programa
+                #en vez de cerrarse por completo
+                except (InvalidUser, TypeError):
+                    logging.exception('el usuario debe de ser de 9 números')
+
             elif opcion2 == 'b':
                 sala = input('A que sala desea enviar el audio?\n')
                 duracion = input('Ingrese duracion del audio: \n')
