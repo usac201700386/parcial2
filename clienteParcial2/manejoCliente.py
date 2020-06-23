@@ -59,6 +59,7 @@ class Cliente(object):
         #DAHM Funcion handler que configura el evento on_message (cuando llega un mensaje a alguno de los topicos que se esta subscrito)
         def on_message(client, userdata, msg):
             #DAHM Revisa si el topico es un archivo para recibirlo con el metodo especifico para esto
+            #JICM generaliza para que si se encuentra la palagra archivos reciba el audio
             if ('archivos' in str(msg.topic)) :
                 logging.debug('Recibiendo audio...')
                 #DAHM Se manda a llamar el metodo para recibir audio y guardarlo en el nombre de la carpeta que aparece en globals
@@ -106,6 +107,7 @@ class Cliente(object):
             #DAHM se crea una tupla con el formato de salas y el qos
             topico = ('salas' + '/' + self.grupo + '/' + sala[0][2:], self.qos)
             topicos.append(topico)
+            #JICM se añaden la suscripcion a las salas de archivos
             topico = ('archivos' + '/' + self.grupo + '/' + sala[0][2:], self.qos)
             topicos.append(topico)
         #DAHM cerramos el archivo

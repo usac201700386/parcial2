@@ -41,6 +41,7 @@ try:
                 sala = input('A que sala desea enviar el audio?\n')
                 duracion = input('Ingrese duracion del audio: \n')
                 user.grabarAudio(audio, duracion)
+                #JICM se configura para que envíe correctamente a las salas
                 user.enviarAudio(audio, "S"+sala)
             else:
                 print('opcion incorrecta\n')
