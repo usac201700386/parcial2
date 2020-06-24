@@ -3,19 +3,29 @@ from manejoCliente import InvalidUser
 from manejoCliente import Seleccion_invalida
 import logging
 from globals import *
+
 #JDCP A MI ME TOCO TCP POR ESO NO HAY MUCHOS COMENTARIOS DE MI PARTE EN ESTE CODIGO XD
 #JICM A MI ME TOCO MANEJO DE INSTRUCCIONES, POR ESO TAMPOCO MUCHOS COMENTARIOS MIOS EN ESTE CODIGO XD
+
+#DAHM Constantes a utilizar en la interfaz importadas de globals.py
 grupo = GROUP_ID
 audio = FILENAME
-user = Cliente()
 
+#DAHM Creacion de instancia de la clase Cliente la cual tiene ya todos los argumentos por defecto importados de globals.py
+user = Cliente()
+#DAHM Se configura para que se pueda conectar a un broker MQTT
 user.configMQTT()
+#DAHM Se conecta al broker
 user.conectar()
+#DAHM Se subscribe a los topicos detectados de los .txt
 user.subscripcion()
 
+#DAHM El metodo topicos retorna una lista de tuplas con los topicos y el QoS entonces lo desplegamos al inicio del menu
 destinos = user.topicos()
 logging.info(('----------   TOPICOS A LOS QUE SE ESTA SUBSCRITO   -------- '))
 for destino in destinos:
+    #DAHM Desplegamos solo el primer argumento ya que a un usuario final no  le interesa el QoS, de esta manera
+    #DAHM el usuario sabe de donde puede recibir mensajes o audios 
     logging.info((destino[0]))
 
 try:
@@ -94,6 +104,9 @@ try:
         except (Seleccion_invalida,ValueError):
             #JDCP SE MUESTRA AL USUARIO QUE HA INGRESADO UN DATO INVALIDO
             logging.error('data invalido, Ingrese una de las siguiente opciones : \n')
+
+#DAHM El usuario solo puede finalizar el programa con interrupcion ctrl+c
 except KeyboardInterrupt:
+    #DAHM Se llama el metodo que desconecta del broker MQTT a la instancia
     user.desconectar()
     logging.info('desconectado del broker!')
