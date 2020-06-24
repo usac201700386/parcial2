@@ -7,7 +7,7 @@ mensajes de texto, audio y salas de chat TODO BASADO EN MQTT.
 
 INSTRUCCIONES DE USO: En usuarios.txt se escribe el carnet del cliente,
 en salas.txt se ingresan las salas a las que va a pertenecer, todos los
-codigos y archivos utilizados estan almacenados en la carpeta clienteParcial2.
+codigos y archivos utilizados estan almacenados en la carpeta clienteParcial2, *para_ejecutar_la_aplicacion_correr_clienteParcial2/cliente.py! 
 
 Integrantes:    Diego Andres Herrera Morales        201700804
                 Jose Daniel Campos Pol              201700386
